@@ -17,7 +17,7 @@ import Footer from './components/Footer';
 export default function App() {
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 relative selection:bg-blue-600 selection:text-white">
-      {/* Interactive Electric Blue Custom Cursor (Dot + Trailing Aura) */}
+      {/* Interactive Obsidian Black Custom Cursor (Canvas Ribbon Trail & Glow Dot) */}
       <CustomCursor />
 
       {/* Top Reading Progress Bar (Electric Blue Glow) & Back-to-Top Button */}

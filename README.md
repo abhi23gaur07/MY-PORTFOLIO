@@ -4,7 +4,7 @@
 
 A modern, high-performance personal portfolio website built for **Abhishek Gaur**, B.Tech Electronics Engineering undergraduate (**Specialization in Defence Technology**) at **Rashtriya Raksha University (RRU)**.
 
-Designed with a luminous, professional **Light Theme of Royal Blue, Cyan, Slate Grey, and Crisp White**, dynamic red flame and sparkle cursor effects, smooth scroll reveals, and verified academic and engineering credentials.
+Designed with a luminous, professional **Light Theme of Royal Blue, Cyan, Slate Grey, and Crisp White**, high-performance obsidian black canvas ribbon cursor with smooth physics trailing, smooth scroll reveals, and verified academic and engineering credentials.
 
 ---
 
@@ -12,7 +12,7 @@ Designed with a luminous, professional **Light Theme of Royal Blue, Cyan, Slate 
 - **Framework:** React 19 + Vite
 - **Theme:** Clean Luminous Light Theme (Royal Blue, Cyan, Crisp White & Slate)
 - **Styling:** Tailwind CSS v4 (Glassmorphism, soft circuit grid overlays)
-- **Interactive Cursor:** Fiery Red Custom Cursor with rising flame embers, twinkling stars, and click bursts
+- **Interactive Cursor:** Obsidian Black HTML5 Canvas ribbon trail cursor replicating the Smart Library Admin physics
 - **Animations:** Hardware-accelerated IntersectionObserver Scroll Reveals & Canvas Confetti
 - **Icons:** Lucide Icons + Custom Vector Electronics & Brand SVGs
 
