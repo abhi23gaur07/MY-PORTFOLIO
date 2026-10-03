@@ -34,28 +34,25 @@ Designed with a luminous, professional **Light Theme of Royal Blue, Cyan, Slate 
 
 2. **Hero & Profile Showcase:**
    - Headline: *"Turning Raw Silicon & Code Into Intelligent IoT Realities"*
-   - High-impact portrait photo with cyber frame, target corner accents, and floating badges:
-     - 🏆 `#1 Hardware Category | SIH RRU`
-     - ⚡ `Embedded Systems & IoT`
-     - 📡 `Telemetry & Firmware Architecture`
-   - Real-time university rank metrics banner
+   - High-impact portrait photo with cyber frame and electronic quote:
+     > *"Be a living electronic circuit. Practice resistance where needed, like a resistor. Preserve energy where needed, like a capacitor. Direct energy where needed, like a diode. And above all, be driven by a purpose, like an IC."*
+   - Highlights: Embedded Systems & Defence Technology undergraduate credentials.
 
-3. **How I Turn Ideas Into Reality (Engineering Workflow):**
+3. **Achievements & Hackathons (Top Section):**
+   - **Smart India Hackathon (SIH) RRU Internal Round:** **#1 in Hardware Category** & **#8 in Overall Category**.
+   - Interactive confetti celebration button and evaluation criteria breakdown.
+
+4. **How I Turn Ideas Into Reality (Engineering Workflow):**
    - **01. Research & Problem Statement Analysis:** Feasibility study, sensor trade-offs, power budgeting.
    - **02. Circuit Design & Component Selection:** Microcontrollers (ESP32/STM32/Arduino), schematics, bus topologies (I2C/SPI/UART).
    - **03. Firmware & Hardware Prototyping:** Embedded C/C++, state machines, sensor calibration, breadboard verification.
    - **04. Cloud Telemetry, Testing & Deployment:** MQTT/HTTP APIs, offline sync engine, automated alerts, field validation.
    - Includes interactive 4-phase deep dive inspector.
 
-4. **Featured Projects (Only 2 Repositories + All Repos Link):**
-   - **The Smart Library:** Automated institutional library circulation with RFID/IoT hardware scanning, 48-hour hold reservations, high-throughput SQLite WAL architecture, and automated WhatsApp alert dispatching.
+5. **Featured Projects (Only 2 Repositories + All Repos Link):**
+   - **The Smart Library:** Modern automated institutional library management and circulation platform featuring 48-hour hold reservations, high-throughput SQLite WAL architecture, automated WhatsApp alert dispatching, and student transaction tracking.
    - **Delta Neurons 🧠:** Assistive cognitive healthcare platform for dementia patients in India's North Eastern Region (NER), featuring a proprietary offline-to-online synchronization engine and Assamese/NER sensory reminiscence therapy.
    - **Explore All My Repositories:** Direct CTA to Abhishek's GitHub profile.
-
-5. **Achievements & Hackathons:**
-   - **Smart India Hackathon (SIH) RRU Internal Round:** **#1 in Hardware Category** & **#8 in Overall Category**.
-   - Interactive confetti celebration button.
-   - Evaluation criteria breakdown (Hardware reliability, live prototype, hardware-software co-design).
 
 6. **Leadership & Technical Engagement:**
    - **Lead & Project Head — The Smart Library System** (Rashtriya Raksha University)
@@ -89,7 +86,7 @@ Designed with a luminous, professional **Light Theme of Royal Blue, Cyan, Slate 
 
 9. **Quote & Contact Information:**
    - Inspiring electronics engineering quote reflecting Abhishek's vision.
-   - Direct Email with one-click copy and mailto action.
+   - Direct Email: **gaurabhishek2309@gmail.com** with one-click copy and mailto action.
    - Interactive message dispatch form with validation.
    - LinkedIn & GitHub profiles.
 
