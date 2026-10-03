@@ -77,7 +77,6 @@ Designed with a luminous, professional **Light Theme of Royal Blue, Cyan, Slate 
      - Technical Communication (Jury pitching, client demos, documentation)
      - Creativity & Hardware Innovation
      - Time Management & Hackathon Sprint Execution
-   - **Hardware Engineering Workbench Matrix:** Interactive breakdown of Lab Instruments, EDA & Simulation, Microcontrollers, and Protocols.
 
 8. **Certifications & Workshops:**
    - **One-Day Workshop on Quantum Computing** (Quantum bits, superposition, entanglement, quantum logic gates, post-quantum hardware security).

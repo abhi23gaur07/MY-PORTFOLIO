@@ -6,16 +6,12 @@ import {
   CheckCircle2, 
   Sliders, 
   Wrench, 
-  Activity, 
   Terminal, 
-  Radio, 
-  Layers, 
   Sparkles,
   ArrowRight,
   ShieldCheck,
   BrainCircuit,
-  Binary,
-  Shield
+  Binary
 } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import ScrollReveal from './ScrollReveal';
@@ -173,137 +169,7 @@ export default function Skills() {
           ))}
         </div>
 
-        {/* Workbench Matrix / Silicon Architecture Strip (Light Theme) */}
-        <ScrollReveal animation="zoom-in" delay={150}>
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 shadow-xl shadow-blue-900/5 relative overflow-hidden">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 mb-8 border-b border-slate-100">
-            <div>
-              <span className="text-xs font-mono text-blue-600 uppercase tracking-widest font-bold flex items-center gap-1.5">
-                <Shield className="w-4 h-4 text-blue-600" /> Hardware Engineering Workbench
-              </span>
-              <h3 className="text-2xl font-black text-slate-900 mt-1">
-                Integrated Silicon & Instrument Ecosystem
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
-                Daily tools, lab equipment, protocols, and EDA software utilized across academic and hackathon builds.
-              </p>
-            </div>
 
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-xs font-mono text-blue-700 self-start lg:self-auto font-semibold">
-              <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-              <span>VERIFIED WORKBENCH 2026</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            {/* Column 1: Lab Instruments */}
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
-              <div className="flex items-center gap-2 mb-3 text-blue-700">
-                <Activity className="w-4 h-4" />
-                <h5 className="text-xs font-bold font-mono uppercase tracking-wider text-slate-900">Lab Instruments</h5>
-              </div>
-              <div className="space-y-1.5 text-xs text-slate-700">
-                <div className="flex items-center gap-2">
-                  <span className="text-blue-600 font-bold">▹</span>
-                  <span>Digital Storage Oscilloscopes</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-blue-600 font-bold">▹</span>
-                  <span>Logic Analyzers & Bus Sniffers</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-blue-600 font-bold">▹</span>
-                  <span>True-RMS Digital Multimeters</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-blue-600 font-bold">▹</span>
-                  <span>Bench DC Variable Power Supply</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Column 2: EDA & Simulation */}
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
-              <div className="flex items-center gap-2 mb-3 text-blue-600">
-                <Layers className="w-4 h-4" />
-                <h5 className="text-xs font-bold font-mono uppercase tracking-wider text-slate-900">EDA & Simulation</h5>
-              </div>
-              <div className="space-y-1.5 text-xs text-slate-700">
-                <div className="flex items-center gap-2">
-                  <span className="text-blue-600 font-bold">▹</span>
-                  <span>Altium Designer (PCB Layout)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-blue-600 font-bold">▹</span>
-                  <span>KiCad EDA (Schematic Capture)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-blue-600 font-bold">▹</span>
-                  <span>SPICE / LTspice Circuit Sim</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-blue-600 font-bold">▹</span>
-                  <span>MATLAB & Simulink Systems</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Column 3: Silicon & MCUs */}
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
-              <div className="flex items-center gap-2 mb-3 text-emerald-700">
-                <Cpu className="w-4 h-4" />
-                <h5 className="text-xs font-bold font-mono uppercase tracking-wider text-slate-900">Microcontrollers</h5>
-              </div>
-              <div className="space-y-1.5 text-xs text-slate-700">
-                <div className="flex items-center gap-2">
-                  <span className="text-emerald-600 font-bold">▹</span>
-                  <span>ARM Cortex-M Architecture</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-emerald-600 font-bold">▹</span>
-                  <span>STM32 (HAL, Registers, Timers)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-emerald-600 font-bold">▹</span>
-                  <span>ESP32 (Dual-core, Wi-Fi/BLE)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-emerald-600 font-bold">▹</span>
-                  <span>Arduino / AVR Prototyping</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Column 4: Busses & Protocols */}
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
-              <div className="flex items-center gap-2 mb-3 text-amber-700">
-                <Radio className="w-4 h-4" />
-                <h5 className="text-xs font-bold font-mono uppercase tracking-wider text-slate-900">Protocols & RF</h5>
-              </div>
-              <div className="space-y-1.5 text-xs text-slate-700">
-                <div className="flex items-center gap-2">
-                  <span className="text-amber-600 font-bold">▹</span>
-                  <span>I²C, SPI, UART, USB Busses</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-amber-600 font-bold">▹</span>
-                  <span>Bluetooth Low Energy (BLE)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-amber-600 font-bold">▹</span>
-                  <span>Wi-Fi (802.11) & MQTT Telemetry</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-amber-600 font-bold">▹</span>
-                  <span>Verilog / VHDL RTL Logic</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-        </ScrollReveal>
 
       </div>
     </section>
