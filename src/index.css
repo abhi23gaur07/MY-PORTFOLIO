@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --primary-blue: #2563eb;
+    --accent-cyan: #0284c7;
+    --light-bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border-color: rgba(226, 232, 240, 0.9);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  }
+
+  body {
+    background-color: #f8fafc;
+    color: #0f172a;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom scrollbar for light theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
+}
+
+/* Glassmorphism utility classes - Light Theme */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.05);
+}
+
+.glass-panel-hover {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-panel-hover:hover {
+  background: #ffffff;
+  border-color: rgba(37, 99, 235, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.12), 0 0 15px rgba(56, 189, 248, 0.1);
+}
+
+/* Light circuit grid pattern */
+.bg-circuit-grid {
+  background-image: radial-gradient(rgba(37, 99, 235, 0.08) 1.2px, transparent 1.2px),
+                    radial-gradient(rgba(2, 132, 199, 0.05) 1.2px, transparent 1.2px);
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+}
+
+/* Gradient text utility for light theme */
+.gradient-text-blue {
+  background: linear-gradient(135deg, #1d4ed8 0%, #0284c7 50%, #0f172a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-royal {
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #0284c7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Glow effects for light background */
+.glow-blue-soft {
+  box-shadow: 0 10px 35px -5px rgba(37, 99, 235, 0.15);
+}
+
+/* Custom Electric Blue Cursor for mouse devices */
+@media (pointer: fine) {
+  body, a, button, input, textarea, select, [role="button"], label {
+    cursor: none !important;
+  }
+}
+
+/* Hardware accelerated card hover lift */
+.card-hover-lift {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-hover-lift:hover {
+  transform: translateY(-6px);
+}
+
