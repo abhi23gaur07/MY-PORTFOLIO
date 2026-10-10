@@ -16,7 +16,7 @@ export const portfolioData = {
       { label: "Institution", value: "RRU", context: "National Importance Institute" },
       { label: "Official Major", value: "Defence Tech", context: "B.Tech Electronics @ RRU" },
       { label: "Core Competency", value: "Embedded & IoT", context: "Firmware & Circuitry" },
-      { label: "Flagship Repositories", value: "2+", context: "The Smart Library & Delta Neurons" }
+      { label: "Flagship Repositories", value: "4+", context: "Aqua Saviour, Nexus Nurture & More" }
     ]
   },
 
@@ -58,7 +58,62 @@ export const portfolioData = {
 
   projects: [
     {
+      id: "aqua-saviour",
+      repoName: "AQUA-SAVIOUR",
+      title: "Aqua Saviour 💧 · AI-Powered Underground Pipeline Crack & Leakage Detector",
+      shortTitle: "Aqua Saviour",
+      category: "Smart Infrastructure IoT · Acoustic ToF & GIS Telemetry",
+      featured: true,
+      githubUrl: "https://github.com/abhi23gaur07/AQUA-SAVIOUR",
+      demoUrl: "https://aqua-saviour-iota.vercel.app",
+      badge: "Smart Infrastructure IoT",
+      status: "Live Deployment",
+      summary: "An end-to-end underground pipeline crack and leakage localization platform using low-cost ESP32 wireless sensor nodes, INMP441 I²S MEMS acoustic hydrophones, Time-of-Flight (ToF) cross-correlation math, and 3D/GIS hydro-geological moisture surveillance to prevent road bursts without blind excavation.",
+      fullDescription: "Engineered to solve the critical problem of hidden underground pipeline leaks and sudden road bursts across Indian cities. Aqua Saviour clamps non-invasive INMP441 I²S MEMS omnidirectional microphones and solar-powered ESP32-WROOM-32D + NEO-6M GPS nodes onto buried PVC/ductile-iron water mains. By computing the Time-of-Flight arrival difference (Δt) of 820 Hz–1.25 kHz acoustic waves between adjacent nodes and fusing it with live 5-layer Open-Meteo & NASA POWER SMAP soil moisture telemetry, the 10-portal React + Three.js GIS command center pinpoints subsurface leaks to centimeter accuracy before surface infrastructure collapses.",
+      highlights: [
+        "Time-of-Flight (ToF) acoustic cross-correlation pinpointing buried leaks (X = (D + v·Δt)/2) without destructive road excavation",
+        "Interactive 3D Underground Cutaway Model (Three.js/WebGL) visualizing 5cm asphalt, 15cm soil strata, 10cm pressurized PVC pipe, and acoustic wave rings",
+        "10-Portal Multi-Role GIS Command Center with Satellite Node Telemetry (N01–N04), R-01/R-02 Valve Relay Controls, and 5 RBAC Engineering Roles",
+        "Live 5-Layer Open-Meteo (0–100cm) & NASA POWER SMAP Hydro-Geological Soil Moisture & Pore-Pressure Risk Heatmaps",
+        "Ultra-low-cost (~₹1,010/node) solar-powered ESP32 + INMP441 I²S + NEO-6M GPS edge hardware architecture"
+      ],
+      techStack: ["ESP32-WROOM-32D", "INMP441 I²S MEMS", "NEO-6M GPS", "Three.js / WebGL", "React 19", "Leaflet GIS", "Open-Meteo & NASA SMAP API", "Acoustic ToF DSP", "Tailwind CSS"],
+      stats: {
+        localizationError: "< ±15 cm ToF",
+        nodeCost: "₹1,010 / Node",
+        architecture: "10 GIS & 3D Portals"
+      }
+    },
+    {
+      id: "nexus-nurture",
+      repoName: "NEXUS-NURTURE",
+      title: "Nexus Nurture 🏠 · Next-Gen 3D Smart Home & Edge Energy Automation Platform",
+      shortTitle: "Nexus Nurture",
+      category: "Smart Living IoT · Spatial mmWave & Edge HVAC Control",
+      featured: true,
+      githubUrl: "https://github.com/abhi23gaur07/NEXUS-NURTURE",
+      demoUrl: "https://nexus-nurture-lake.vercel.app",
+      badge: "Smart Living & Energy IoT",
+      status: "Live Deployment",
+      summary: "A next-generation IoT smart living and electrical energy conservation platform featuring interactive 3D smart home visualization, spatial 24GHz mmWave human presence & micro-motion sensing, load-cell seated occupancy fusion, and instant edge Smart AC airflow automation.",
+      fullDescription: "Designed for modern energy-conscious smart homes, Nexus Nurture eliminates wasted electrical power by fusing 24GHz spatial mmWave radar (tracking distance, azimuth angle, and breathing micro-motion energy) with furniture load-cell weight sensors and real-time temperature/humidity/CO₂ telemetry across distributed ESP32 room nodes. Instead of cooling empty spaces, its deterministic edge state machine actuates motorized HVAC louvers ('Target Follow' & 'Ceiling Indirect Coanda' modes) and integrates sleep-cycle biometric thermal regulation, voice/Siri shortcuts, and an interactive 3D architectural digital twin.",
+      highlights: [
+        "Spatial 24GHz mmWave Radar + Load-Cell Sensor Fusion tracking occupant distance, azimuth (-22°), and seated micro-motion energy",
+        "Instant Edge Smart AC Actuation with motorized servo louver steering (Follow-Me, Desk Comfort, and Indirect Coanda modes)",
+        "Interactive 3D Smart Home Architectural Digital Twin with live room-by-room ESP32 mesh telemetry (Temp, Humidity, CO₂, RSSI)",
+        "Sleep-Cycle Biometrics Dashboard dynamically adjusting nocturnal thermal setpoints to save electrical energy",
+        "Built-in Edge Payload Console, Node Mesh Topology Viewer, and Voice / Siri Shortcut Automation"
+      ],
+      techStack: ["ESP32 Mesh Nodes", "24GHz mmWave Radar", "Load-Cell ADC", "Three.js / 3D Twin", "React 19 & TypeScript", "Edge HVAC Servo Control", "Voice & Siri Webhooks", "Tailwind CSS"],
+      stats: {
+        energySavings: "Up to 38% HVAC",
+        edgeLatency: "< 15ms Actuation",
+        sensorFusion: "mmWave + Load Cell"
+      }
+    },
+    {
       id: "smart-library",
+      repoName: "the-smart-library",
       title: "The Smart Library · Automated Circulation & WhatsApp Reminder System",
       shortTitle: "The Smart Library",
       category: "Full-Stack Software & Automation",
@@ -85,12 +140,13 @@ export const portfolioData = {
     },
     {
       id: "delta-neurons",
+      repoName: "DELTA-NEURONS-",
       title: "Delta Neurons 🧠 · AI-Assisted Cognitive Healthcare Platform for NER",
       shortTitle: "Delta Neurons",
       category: "Assistive IoT & Cognitive Healthcare",
       featured: true,
       githubUrl: "https://github.com/abhi23gaur07/DELTA-NEURONS-",
-      demoUrl: "https://github.com/abhi23gaur07/DELTA-NEURONS-",
+      demoUrl: "https://delta-neurons.vercel.app",
       badge: "Healthcare Innovation",
       status: "Deployed Prototype",
       summary: "An AI-powered cognitive stimulation, reminiscence therapy, and memory assistance platform engineered specifically for elderly dementia patients in India's North Eastern Region (NER).",
