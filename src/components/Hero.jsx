@@ -171,25 +171,11 @@ export default function Hero() {
                     className="w-full h-full object-cover object-center filter brightness-[1.01] contrast-[1.03] transition-transform duration-700 group-hover:scale-105"
                   />
                   
-                  {/* Subtle Light Gradient at bottom for text contrast */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-transparent opacity-80" />
-
                   {/* Corner Target Accents */}
                   <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-blue-400 pointer-events-none" />
                   <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-blue-400 pointer-events-none" />
                   <div className="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-blue-300 pointer-events-none" />
                   <div className="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-blue-300 pointer-events-none" />
-
-                  {/* Bottom Image Tag */}
-                  <div className="absolute bottom-4 left-4 right-4 p-3 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200 shadow-md">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-slate-900 font-bold text-sm leading-tight">{personal.name}</p>
-                        <p className="text-blue-600 text-xs font-mono font-semibold">B.Tech ECE · Defence Technology</p>
-                      </div>
-                      <Shield className="w-5 h-5 text-blue-600" />
-                    </div>
-                  </div>
                 </div>
               </div>
 
