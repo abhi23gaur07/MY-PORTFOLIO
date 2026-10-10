@@ -225,6 +225,36 @@ export const portfolioData = {
 
   leadership: [
     {
+      id: "lead-aqua-saviour",
+      role: "Lead & Project Head",
+      project: "Aqua Saviour (AQUASAFE AI Underground Pipeline Leak Detector)",
+      organization: "Smart Infrastructure & IoT Initiative",
+      period: "2026 – Present",
+      description: "Spearheaded the hardware-software co-design of an AI-assisted underground pipeline crack and leakage localization platform using acoustic Time-of-Flight (ToF) and hydro-geological GIS surveillance.",
+      responsibilities: [
+        "Architected the solar-powered ESP32-WROOM-32D + INMP441 I²S MEMS acoustic hydrophone + NEO-6M 1Hz GPS PPS edge sensor node topology",
+        "Formulated and implemented the 256-sample DMA cross-correlation Time-of-Flight math engine (X = (D + v·Δt)/2) to pinpoint buried leaks within centimeter accuracy",
+        "Designed the 10-portal React + Three.js 3D underground road/pipeline cutaway and multi-role RBAC GIS command center",
+        "Integrated live 5-layer Open-Meteo (0–100cm) and NASA POWER SMAP soil moisture & pore-pressure risk heatmaps for zero-damage surgical excavation"
+      ],
+      impact: "Enabled non-invasive, centimeter-accurate subsurface leak pinpointing at ~₹1,010/node, preventing catastrophic road bursts and saving 98.8% of excavation costs."
+    },
+    {
+      id: "lead-nexus-nurture",
+      role: "Lead & Project Head",
+      project: "Nexus Nurture (3D Smart Home & Edge Energy Automation)",
+      organization: "Smart Living & Energy Conservation Initiative",
+      period: "2026 – Present",
+      description: "Directed the end-to-end engineering of a next-generation smart home electrical energy conservation platform combining spatial mmWave radar, load-cell fusion, and 3D digital twin telemetry.",
+      responsibilities: [
+        "Engineered multi-sensor edge fusion combining 24GHz spatial mmWave human presence radar (distance, azimuth, micro-motion) with seated load-cell weight sensing",
+        "Programmed deterministic ESP32 edge state machines for motorized Smart AC servo louver actuation ('Target Follow', 'Desk Comfort', and 'Indirect Coanda' airflow modes)",
+        "Built an interactive Three.js 3D Smart Home architectural digital twin with real-time room-by-room environmental telemetry (Temp, Humidity, CO₂, RSSI)",
+        "Developed the Sleep-Cycle Biometrics thermal controller, Node Mesh Topology Viewer, and Voice / Siri webhook automation"
+      ],
+      impact: "Eliminated unoccupied HVAC cooling waste and reduced residential electrical energy consumption by up to 38% with sub-15ms edge actuation latency."
+    },
+    {
       id: "lead-smart-library",
       role: "Lead & Project Head",
       project: "The Smart Library System",

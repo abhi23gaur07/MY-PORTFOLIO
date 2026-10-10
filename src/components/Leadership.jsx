@@ -5,6 +5,8 @@ import {
   CheckCircle, 
   BookOpen, 
   Brain, 
+  Droplets,
+  Home,
   ShieldCheck, 
   Target,
   Sparkles,
@@ -16,6 +18,20 @@ import ScrollReveal from './ScrollReveal';
 
 export default function Leadership() {
   const { leadership } = portfolioData;
+
+  const renderLeadershipIcon = (id) => {
+    switch (id) {
+      case 'lead-aqua-saviour':
+        return <Droplets className="w-6 h-6 text-blue-600" />;
+      case 'lead-nexus-nurture':
+        return <Home className="w-6 h-6 text-blue-600" />;
+      case 'lead-smart-library':
+        return <BookOpen className="w-6 h-6 text-blue-600" />;
+      case 'lead-delta-neurons':
+      default:
+        return <Brain className="w-6 h-6 text-blue-600" />;
+    }
+  };
 
   return (
     <section id="leadership" className="py-24 relative overflow-hidden">
@@ -34,21 +50,19 @@ export default function Leadership() {
               </span>
             </h2>
             <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
-              Leading multidisciplinary initiatives from initial system design to field-tested execution, balancing technical precision with human-centric purpose.
+              Leading multidisciplinary initiatives across smart water infrastructure, 3D smart living automation, campus software, and cognitive healthcare from initial system design to field-tested execution.
             </p>
           </div>
         </ScrollReveal>
 
-        {/* 2 Detailed Leadership Roles Grid */}
+        {/* 4 Detailed Leadership Roles Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {leadership.map((item, idx) => {
-            const isSmartLibrary = item.id === 'lead-smart-library';
-
             return (
               <ScrollReveal
                 key={item.id}
-                animation={idx === 0 ? 'fade-left' : 'fade-right'}
-                delay={idx * 150}
+                animation={idx % 2 === 0 ? 'fade-left' : 'fade-right'}
+                delay={(idx % 2) * 150}
                 className="h-full"
               >
                 <div
@@ -59,11 +73,7 @@ export default function Leadership() {
                   <div className="flex items-center justify-between gap-4 mb-6">
                     <div className="flex items-center gap-3.5">
                       <div className="w-13 h-13 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center p-3 shadow-xs">
-                        {isSmartLibrary ? (
-                          <BookOpen className="w-6 h-6 text-blue-600" />
-                        ) : (
-                          <Brain className="w-6 h-6 text-blue-600" />
-                        )}
+                        {renderLeadershipIcon(item.id)}
                       </div>
                       <div>
                         <span className="text-xs font-mono text-blue-600 uppercase tracking-widest font-bold">
