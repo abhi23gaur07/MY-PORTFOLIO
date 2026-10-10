@@ -10,7 +10,10 @@ import {
   Code2,
   Shield,
   Layers,
-  Quote
+  Quote,
+  Download,
+  FileText,
+  Eye
 } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './Icons';
 import ScrollReveal from './ScrollReveal';
@@ -18,6 +21,7 @@ import { portfolioData } from '../data/portfolioData';
 
 export default function Hero() {
   const { personal } = portfolioData;
+  const resumeHref = personal.resumeUrl || '/Abhishek_Gaur_Resume.pdf';
 
   return (
     <section id="home" className="relative min-h-screen pt-32 pb-20 flex items-center justify-center overflow-hidden">
@@ -76,24 +80,33 @@ export default function Hero() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            <div className="flex flex-wrap items-center gap-3.5 pt-2">
               <a
                 href="#projects"
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-bold text-sm bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all"
               >
                 <span>View Featured Projects</span>
                 <ArrowRight className="w-4 h-4" />
               </a>
 
               <a
+                href={resumeHref}
+                download="Abhishek_Gaur_Resume.pdf"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm bg-slate-900 hover:bg-blue-700 text-white shadow-md shadow-slate-900/15 hover:shadow-blue-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              >
+                <Download className="w-4 h-4 text-cyan-300" />
+                <span>Download Resume</span>
+              </a>
+
+              <a
                 href="#contact"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-semibold text-sm bg-white border border-slate-300 text-slate-800 hover:text-blue-600 hover:border-blue-400 hover:bg-blue-50/40 transition-all shadow-sm"
+                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-full font-semibold text-sm bg-white border border-slate-300 text-slate-800 hover:text-blue-600 hover:border-blue-400 hover:bg-blue-50/40 transition-all shadow-sm"
               >
                 <span>Contact Abhishek</span>
               </a>
 
               {/* Direct Social Links */}
-              <div className="flex items-center gap-2.5 pl-2">
+              <div className="flex items-center gap-2.5 pl-1">
                 <a
                   href={personal.github}
                   target="_blank"
@@ -138,7 +151,7 @@ export default function Hero() {
           </div>
 
           {/* Right Column: Abhishek's Photo (Stomach to Top Portrait View) */}
-          <div className="lg:col-span-5 flex justify-center items-center relative">
+          <div className="lg:col-span-5 flex justify-center items-center relative pb-8 sm:pb-12">
             <ScrollReveal animation="fade-left" delay={200} className="w-full flex justify-center">
             
             {/* Soft Ambient Radial Glow (Blue/Cyan) */}
@@ -196,6 +209,47 @@ export default function Hero() {
                       "Be a living electronic circuit. Practice resistance where needed, like a resistor. Preserve energy where needed, like a capacitor. Direct energy where needed, like a diode. And above all, be driven by a purpose, like an IC."
                     </p>
                   </div>
+                </div>
+              </div>
+
+              {/* LEFT-BELOW OF PHOTO: Recruiter-Focused Resume Download & Preview Card */}
+              <div className="mt-4 sm:mt-0 sm:absolute sm:-bottom-10 sm:-left-6 lg:-left-12 w-full sm:w-auto sm:min-w-[295px] bg-white/95 backdrop-blur-md border-2 border-blue-300/90 rounded-2xl p-3.5 sm:p-4 shadow-2xl shadow-blue-900/15 z-20 hover:border-blue-600 transition-all duration-300">
+                <div className="flex items-center justify-between gap-2 mb-2.5">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center text-white shrink-0 shadow-sm shadow-blue-500/30">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        For Recruiters &amp; Companies
+                      </span>
+                      <p className="text-xs font-black text-slate-900 mt-0.5">
+                        Official Engineering Resume
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <a
+                    href={resumeHref}
+                    download="Abhishek_Gaur_Resume.pdf"
+                    className="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-md shadow-blue-500/25 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Download CV (PDF)</span>
+                  </a>
+                  <a
+                    href={resumeHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Preview Resume in Browser"
+                    className="inline-flex items-center justify-center gap-1 px-3 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 hover:border-blue-300 transition-all"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    <span>View</span>
+                  </a>
                 </div>
               </div>
 

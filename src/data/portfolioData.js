@@ -7,9 +7,12 @@ export const portfolioData = {
     specialization: "Defence Technology",
     location: "Rashtriya Raksha University, Gandhinagar, Gujarat, India",
     email: "gaurabhishek2309@gmail.com",
+    institutionalEmail: "26beedt005@student.rru.ac.in",
+    phone: "+91 94246 30318",
     github: "https://github.com/abhi23gaur07",
     linkedin: "https://www.linkedin.com/in/abhishek-gaur-855a3b388/?isSelfProfile=true",
     avatar: "/profile.jpg",
+    resumeUrl: "/Abhishek_Gaur_Resume.pdf",
     bio: "Hi, I'm Abhishek Gaur — a B.Tech Electronics Engineering undergraduate with a Specialization in Defence Technology at Rashtriya Raksha University (RRU). Keen learner and a Deep Thinker, currently working on embedded systems and IOT projects, with a focused portfolio consisting of curated, high-impact projects.",
     quote: "Be a living electronic circuit. Practice resistance where needed, like a resistor. Preserve energy where needed, like a capacitor. Direct energy where needed, like a diode. And above all, be driven by a purpose, like an IC.",
     stats: [

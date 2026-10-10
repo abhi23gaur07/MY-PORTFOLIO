@@ -10,7 +10,12 @@ import {
   Quote, 
   ExternalLink,
   Cpu,
-  Shield
+  Shield,
+  Download,
+  FileText,
+  Eye,
+  Briefcase,
+  Phone
 } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './Icons';
 import { portfolioData } from '../data/portfolioData';
@@ -18,6 +23,7 @@ import ScrollReveal from './ScrollReveal';
 
 export default function Contact() {
   const { personal, contact } = portfolioData;
+  const resumeHref = personal.resumeUrl || '/Abhishek_Gaur_Resume.pdf';
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -54,7 +60,7 @@ export default function Contact() {
         
         {/* Engineering Quote Card (Light Theme) */}
         <ScrollReveal animation="zoom-in" delay={100}>
-          <div className="mb-20 bg-gradient-to-r from-blue-50/80 via-white to-indigo-50/80 border-2 border-blue-200 rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-xl shadow-blue-900/5">
+          <div className="mb-14 bg-gradient-to-r from-blue-50/80 via-white to-indigo-50/80 border-2 border-blue-200 rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-xl shadow-blue-900/5">
             <div className="absolute top-4 right-6 text-blue-500/10 pointer-events-none">
               <Quote className="w-32 h-32" />
             </div>
@@ -79,6 +85,61 @@ export default function Contact() {
                 <span className="text-xs font-mono text-slate-500 mt-0.5 font-medium">
                   Rashtriya Raksha University (RRU) · Gandhinagar, Gujarat
                 </span>
+              </div>
+            </div>
+          </div>
+        </ScrollReveal>
+
+        {/* HIGH-IMPACT RECRUITER & COMPANIES RESUME SPOTLIGHT BANNER */}
+        <ScrollReveal animation="fade-up" delay={120}>
+          <div className="mb-16 rounded-3xl bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white p-7 sm:p-10 shadow-2xl shadow-blue-950/20 border border-blue-500/30 relative overflow-hidden">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
+              <div className="space-y-3 max-w-2xl">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-mono font-bold uppercase tracking-wider">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <Briefcase className="w-3.5 h-3.5" />
+                  <span>For Recruiters, R&amp;D Labs &amp; Hiring Companies</span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-white leading-snug">
+                  Looking for an Embedded Systems, IoT Hardware &amp; Full-Stack Innovator?
+                </h3>
+                <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+                  Download my official 1-page engineering resume covering <strong className="text-white">SIH Rank #1 Hardware</strong> credentials, <strong className="text-cyan-300">Aqua Saviour</strong>, <strong className="text-cyan-300">Nexus Nurture</strong>, <strong className="text-cyan-300">Delta Neurons</strong>, and B.Tech Defence Technology coursework at Rashtriya Raksha University.
+                </p>
+                <div className="flex flex-wrap items-center gap-4 pt-1 text-xs font-mono text-slate-300">
+                  {personal.institutionalEmail && (
+                    <span className="inline-flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-lg border border-white/15">
+                      <Mail className="w-3.5 h-3.5 text-cyan-400" />
+                      {personal.institutionalEmail}
+                    </span>
+                  )}
+                  {personal.phone && (
+                    <span className="inline-flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-lg border border-white/15">
+                      <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                      {personal.phone}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 w-full lg:w-auto shrink-0">
+                <a
+                  href={resumeHref}
+                  download="Abhishek_Gaur_Resume.pdf"
+                  className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-2xl font-bold text-sm bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-lg shadow-cyan-500/25 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Download Official Resume (PDF)</span>
+                </a>
+                <a
+                  href={resumeHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-4 rounded-2xl font-bold text-sm bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                >
+                  <Eye className="w-4 h-4 text-cyan-300" />
+                  <span>Preview CV</span>
+                </a>
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Cpu, Menu, X, ArrowUpRight, Mail, Shield } from 'lucide-react';
+import { Cpu, Menu, X, ArrowUpRight, Mail, Shield, Download } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './Icons';
 import { portfolioData } from '../data/portfolioData';
 
@@ -7,6 +7,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const resumeHref = portfolioData.personal.resumeUrl || '/Abhishek_Gaur_Resume.pdf';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,7 +89,7 @@ export default function Navbar() {
         </nav>
 
         {/* Right CTA & Socials */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2.5">
           <a
             href={portfolioData.personal.github}
             target="_blank"
@@ -108,8 +109,16 @@ export default function Navbar() {
             <LinkedinIcon className="w-4 h-4" />
           </a>
           <a
+            href={resumeHref}
+            download="Abhishek_Gaur_Resume.pdf"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold bg-slate-900 hover:bg-blue-700 text-white shadow-sm transition-all"
+          >
+            <Download className="w-3.5 h-3.5 text-cyan-300" />
+            <span>Resume</span>
+          </a>
+          <a
             href={`mailto:${portfolioData.personal.email}`}
-            className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all"
           >
             <Mail className="w-3.5 h-3.5" />
             <span>Connect</span>
@@ -147,7 +156,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
+          <div className="pt-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <a
                 href={portfolioData.personal.github}
@@ -166,14 +175,25 @@ export default function Navbar() {
                 <LinkedinIcon className="w-4 h-4" />
               </a>
             </div>
-            <a
-              href={`mailto:${portfolioData.personal.email}`}
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold bg-blue-600 text-white shadow-md shadow-blue-600/30"
-            >
-              <Mail className="w-4 h-4" />
-              <span>Contact Abhishek</span>
-            </a>
+            <div className="flex items-center gap-2">
+              <a
+                href={resumeHref}
+                download="Abhishek_Gaur_Resume.pdf"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-bold bg-slate-900 text-white shadow-sm"
+              >
+                <Download className="w-3.5 h-3.5 text-cyan-300" />
+                <span>Resume PDF</span>
+              </a>
+              <a
+                href={`mailto:${portfolioData.personal.email}`}
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-bold bg-blue-600 text-white shadow-md shadow-blue-600/30"
+              >
+                <Mail className="w-4 h-4" />
+                <span>Contact</span>
+              </a>
+            </div>
           </div>
         </div>
       )}
