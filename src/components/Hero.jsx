@@ -49,7 +49,7 @@ export default function Hero() {
                 </span>
                 <span className="flex items-center gap-1.5 font-mono">
                   <Shield className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
-                  <span>RRU · Specialization in Defence Technology</span>
+                  <span>RRU · Electronics Engineer (Specialization in Defence Tech)</span>
                 </span>
               </div>
 
