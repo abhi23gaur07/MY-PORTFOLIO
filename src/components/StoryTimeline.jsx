@@ -194,3 +194,4 @@ function ActivityIcon(props) {
     </svg>
   );
 }
+

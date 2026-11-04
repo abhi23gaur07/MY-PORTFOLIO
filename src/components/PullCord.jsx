@@ -555,3 +555,4 @@ export default function PullCord({ mode, onToggle }) {
     </div>
   );
 }
+

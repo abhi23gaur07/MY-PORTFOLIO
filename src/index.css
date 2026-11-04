@@ -42,6 +42,23 @@
   transform: rotateX(90deg);
 }
 
+@keyframes scanline {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.85;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
 /* Custom scrollbar for editorial theme */
 ::-webkit-scrollbar {
   width: 8px;
