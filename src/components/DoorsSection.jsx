@@ -171,6 +171,9 @@ export default function DoorsSection() {
                   <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
                     {activeDoor.title}
                   </h3>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-100 dark:bg-cyan-950/60 text-blue-800 dark:text-cyan-300 border border-blue-200 dark:border-cyan-800">
+                    2026 · Lead & Project Head (Present)
+                  </span>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-neutral-300 font-medium">
                   {activeDoor.subtitle}
@@ -251,9 +254,12 @@ export default function DoorsSection() {
                     </div>
 
                     {/* Brass Nameplate */}
-                    <div className="absolute left-1/2 top-[28%] -translate-x-1/2 -translate-y-1/2 w-[72%] py-1.5 sm:py-2 px-1 rounded-sm bg-gradient-to-r from-[#d9be7e] via-[#f7e9b8] to-[#c2a15c] border border-[#fffae8]/60 shadow-md text-center">
+                    <div className="absolute left-1/2 top-[28%] -translate-x-1/2 -translate-y-1/2 w-[76%] py-1 sm:py-1.5 px-1 rounded-sm bg-gradient-to-r from-[#d9be7e] via-[#f7e9b8] to-[#c2a15c] border border-[#fffae8]/60 shadow-md text-center">
                       <span className="block text-[9px] sm:text-[11px] lg:text-xs font-black tracking-widest text-[#2d2110] uppercase truncate drop-shadow-xs">
                         {door.plate}
+                      </span>
+                      <span className="block text-[7px] sm:text-[8px] font-mono font-bold tracking-wider text-[#4a3615] uppercase">
+                        2026 · Present
                       </span>
                     </div>
 

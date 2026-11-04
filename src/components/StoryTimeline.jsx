@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Calendar, Trophy, Shield, Cpu, Award, Milestone, ArrowDown } from 'lucide-react';
+import { Clock, Calendar, Trophy, Shield, Cpu, Award, Milestone, ArrowDown, Activity } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 
 /**
@@ -24,9 +24,9 @@ export default function StoryTimeline() {
     },
     {
       year: '2026',
-      when: 'SIH Internal Round 2026',
-      title: 'Smart India Hackathon (SIH) Internal Round Champion',
-      subtitle: '#1 in Hardware Category · #8 in Overall Category',
+      when: '2026 — Present',
+      title: 'Smart India Hackathon (SIH) Champion — Rank #1 Hardware Category',
+      subtitle: '#1 in Hardware Category · #8 in Overall Category (Present)',
       icon: <Trophy className="w-5 h-5 text-amber-500" />,
       highlight: true,
       bullets: [
@@ -36,9 +36,9 @@ export default function StoryTimeline() {
       ]
     },
     {
-      year: '2025',
-      when: '2025 – 2026',
-      title: 'Project Head & Architect — The Smart Library System',
+      year: '2026',
+      when: '2026 — Present',
+      title: 'Project Head & Architect — The Smart Library System (Present)',
       subtitle: 'Rashtriya Raksha University Campus Circulation Platform',
       icon: <Cpu className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
       bullets: [
@@ -48,11 +48,11 @@ export default function StoryTimeline() {
       ]
     },
     {
-      year: '2025',
-      when: '2025',
-      title: 'Lead & Platform Head — Delta Neurons 🧠',
+      year: '2026',
+      when: '2026 — Present',
+      title: 'Lead & Platform Head — Delta Neurons 🧠 (Present)',
       subtitle: 'Assistive Cognitive Healthcare Platform for India’s NER',
-      icon: <ActivityIcon className="w-5 h-5 text-purple-600 dark:text-purple-400" />,
+      icon: <Activity className="w-5 h-5 text-purple-600 dark:text-purple-400" />,
       bullets: [
         'Designed an innovative Offline-to-Online Synchronization Engine with local queue buffering for zero-internet rural clinics.',
         'Developed culturally rooted Assamese/NER sensory reminiscence stimuli for dementia stimulation.',
@@ -60,8 +60,8 @@ export default function StoryTimeline() {
       ]
     },
     {
-      year: '2024',
-      when: '2024',
+      year: '2026',
+      when: '2026 — Present',
       title: 'Quantum Computing & Embedded Systems Workshops',
       subtitle: 'Qubits, Quantum Gates & Hardware Masterclasses',
       icon: <Award className="w-5 h-5 text-blue-500" />,

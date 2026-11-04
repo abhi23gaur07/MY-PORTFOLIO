@@ -86,13 +86,16 @@ export default function Projects() {
                 <div>
                   {/* Top Badges & Meta */}
                   <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className="px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200">
                         {project.badge}
                       </span>
                       <span className="px-2.5 py-1 rounded-full text-[11px] font-mono text-emerald-800 bg-emerald-50 border border-emerald-200 flex items-center gap-1.5 font-semibold">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                        {project.status}
+                        {project.status || '2026 · Present'}
+                      </span>
+                      <span className="px-2.5 py-1 rounded-full text-[11px] font-mono font-bold text-blue-800 bg-blue-100/70 border border-blue-200">
+                        2026 · Lead & Project Head (Present)
                       </span>
                     </div>
 

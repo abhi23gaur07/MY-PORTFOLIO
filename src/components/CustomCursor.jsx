@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 
 /**
- * CustomCursor - Exact replication of The Smart Library Admin Cursor, customized in Black.
+ * CustomCursor - Exact replication of The Smart Library Admin Cursor, customized in Pure White.
  * Source reference: https://the-smart-library.onrender.com/admin
  * 
  * Features:
  * - Direct HTML5 2D Canvas rendering for smooth 60-120fps tracking
  * - Identical 0.45 spring physics and 20-frame ribbon trail
- * - Responsive dynamic line-width tapering (Math.max(0.5, prog * (isHover ? 5 : 3.5)))
- * - Deep sleek Obsidian/Black styling with subtle dark aura shadows
+ * - Responsive dynamic line-width tapering (Math.max(0.75, prog * (isHover ? 5.5 : 4)))
+ * - Pure White styling with subtle contrast drop-shadows (visible on both light and dark backgrounds)
  * - Hover detection on interactive elements (links, buttons, inputs, selects)
  * - Safe touch-device bypass
  */
@@ -105,13 +105,14 @@ export default function CustomCursor() {
         trail.unshift({ x: pointer.x, y: pointer.y });
         if (trail.length > 20) trail.pop();
 
-        // 1. Draw ribbon trail
+        // 1. Draw pure white ribbon trail with dual contrast shadow
         if (trail.length > 2) {
           ctx.save();
           ctx.lineCap = 'round';
           ctx.lineJoin = 'round';
-          ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
-          ctx.shadowBlur = 10;
+          // Soft contrast shadow so white trail is visible even on white/light blue backgrounds
+          ctx.shadowColor = 'rgba(15, 23, 42, 0.35)';
+          ctx.shadowBlur = 6;
 
           for (let i = 0; i < trail.length - 1; i++) {
             const p1 = trail[i];
@@ -120,22 +121,27 @@ export default function CustomCursor() {
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
-            // Black trailing ribbon with progressive opacity
-            ctx.strokeStyle = `rgba(10, 10, 10, ${prog * 0.8})`;
-            ctx.lineWidth = Math.max(0.5, prog * (pointer.isHover ? 5 : 3.5));
+            // Pure White trailing ribbon with smooth progressive opacity
+            ctx.strokeStyle = `rgba(255, 255, 255, ${Math.min(1, prog * 1.1)})`;
+            ctx.lineWidth = Math.max(0.75, prog * (pointer.isHover ? 5.5 : 4));
             ctx.stroke();
           }
           ctx.restore();
         }
 
-        // 2. Core sleek black dot
+        // 2. Core sleek pure white dot with crisp contrast boundary
         ctx.save();
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.55)';
-        ctx.shadowBlur = pointer.isHover ? 14 : 7;
+        ctx.shadowColor = 'rgba(15, 23, 42, 0.45)';
+        ctx.shadowBlur = pointer.isHover ? 12 : 6;
         ctx.beginPath();
         ctx.arc(pointer.x, pointer.y, pointer.isHover ? 7 : 4.5, 0, Math.PI * 2);
-        ctx.fillStyle = '#0a0a0a';
+        ctx.fillStyle = '#ffffff';
         ctx.fill();
+
+        // Fine hairline border so the white dot has crisp contrast on pure white surfaces
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'rgba(15, 23, 42, 0.3)';
+        ctx.stroke();
         ctx.restore();
       }
 

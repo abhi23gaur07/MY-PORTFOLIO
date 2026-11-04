@@ -53,6 +53,17 @@ export default function DoorModal({ project, isOpen, onClose }) {
             <p className="text-xs sm:text-sm font-mono text-slate-500 dark:text-neutral-400">
               {project.category}
             </p>
+            <div className="flex flex-wrap items-center gap-2 pt-1 font-mono text-xs">
+              <span className="px-2.5 py-0.5 rounded-md bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-cyan-400 border border-blue-200 dark:border-blue-500/20 font-bold">
+                {project.year || '2026'}
+              </span>
+              <span className="px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-neutral-300 border border-slate-200 dark:border-white/10 font-medium">
+                {project.role || 'Lead & Project Head (Present)'}
+              </span>
+              <span className="px-2.5 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 font-semibold">
+                {project.period || '2026 – Present'}
+              </span>
+            </div>
           </div>
 
           {/* Close Button */}
