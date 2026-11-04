@@ -2,10 +2,10 @@
 
 @layer base {
   :root {
-    --background: #e8e4e0;
-    --foreground: #1a1818;
-    --surface: #ded8d4;
-    --line: #d5cdca;
+    --background: #f0f7ff;
+    --foreground: #0f172a;
+    --surface: #ffffff;
+    --line: #e2e8f0;
     color-scheme: light;
   }
 

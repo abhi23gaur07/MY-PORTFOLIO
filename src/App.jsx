@@ -19,8 +19,8 @@ export default function App() {
   const [mode, setMode] = useState('light');
 
   useEffect(() => {
-    // Check saved mode or default to light
-    const saved = localStorage.getItem('abhishek-mode') || 'light';
+    // Default to light blue / white theme on initial load
+    const saved = localStorage.getItem('abhishek-theme-mode') || 'light';
     setMode(saved);
     if (saved === 'dark') {
       document.documentElement.dataset.mode = 'dark';
@@ -41,13 +41,14 @@ export default function App() {
         delete document.documentElement.dataset.mode;
         document.documentElement.classList.remove('dark');
       }
+      localStorage.setItem('abhishek-theme-mode', next);
       localStorage.setItem('abhishek-mode', next);
       return next;
     });
   };
 
   return (
-    <div className="min-h-screen bg-[#e8e4e0] dark:bg-[#1a1818] text-[#1a1818] dark:text-[#e8e4e0] relative selection:bg-blue-600 selection:text-white transition-colors duration-500">
+    <div className="min-h-screen bg-gradient-to-b from-[#eaf4fe] via-[#f4f9ff] to-white dark:from-[#0b1329] dark:via-[#0f172a] dark:to-[#111827] text-slate-900 dark:text-neutral-100 relative selection:bg-blue-600 selection:text-white transition-colors duration-500">
       
       {/* 2D Canvas Ribbon Trail Custom Cursor */}
       <CustomCursor />
