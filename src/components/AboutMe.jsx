@@ -152,9 +152,9 @@ export default function AboutMe() {
               
               <div className="relative rounded-2xl overflow-hidden aspect-[4/5] bg-[#090d18] border border-white/10">
                 <img
-                  src="/abhishek_standing_stage.jpg"
-                  alt="Abhishek Gaur — 3D Character Model Stage"
-                  className="w-full h-full object-cover object-center filter brightness-[1.02] contrast-[1.05] hover:scale-105 transition-transform duration-700"
+                  src="/abhishek_stage_render.jpg"
+                  alt="Abhishek Gaur — Editorial Stage Portrait"
+                  className="w-full h-full object-cover object-top filter brightness-[1.02] contrast-[1.05] hover:scale-105 transition-transform duration-700"
                 />
 
                 {/* Cyber HUD Overlays */}
