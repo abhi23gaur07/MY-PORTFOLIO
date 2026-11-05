@@ -1,41 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Cpu, Menu, X, ArrowUpRight, Mail, Shield, Clock } from 'lucide-react';
-import { GithubIcon, LinkedinIcon } from './Icons';
-import { portfolioData } from '../data/portfolioData';
+import { Menu, X, ArrowRight } from 'lucide-react';
 
 /**
- * Navbar - Editorial navigation header with live IST clock and room for the pull cord.
+ * Navbar - 3D Cinematic Navigation Bar matching the reference design.
+ * 
+ * Features:
+ * - Stylized cyan/blue 'A' monogram logo
+ * - Floating glassmorphic pill nav menu
+ * - Glowing 'Let's Connect →' cyber pill button
+ * - Mobile responsive drawer
  */
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
-  const [timeStr, setTimeStr] = useState('');
-
-  // Live IST Clock
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      // Format to IST
-      const istTime = now.toLocaleTimeString('en-US', {
-        timeZone: 'Asia/Kolkata',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-      });
-      setTimeStr(`${istTime} IST`);
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 30);
 
-      const sections = ['home', 'works', 'about', 'achievements', 'workflow', 'skills', 'certifications', 'contact'];
-      const scrollPosition = window.scrollY + 200;
+      const sections = ['home', 'about', 'works', 'skills', 'achievements', 'contact'];
+      const scrollPosition = window.scrollY + 250;
 
       for (const section of sections) {
         const el = document.getElementById(section);
@@ -50,89 +35,81 @@ export default function Navbar() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const navLinks = [
     { name: 'Home', href: '#home', id: 'home' },
-    { name: 'The Doors', href: '#works', id: 'works' },
-    { name: 'Timeline', href: '#about', id: 'about' },
-    { name: 'Achievements', href: '#achievements', id: 'achievements' },
-    { name: 'Methodology', href: '#workflow', id: 'workflow' },
+    { name: 'About', href: '#about', id: 'about' },
+    { name: 'Projects', href: '#works', id: 'works' },
     { name: 'Skills', href: '#skills', id: 'skills' },
+    { name: 'Achievements', href: '#achievements', id: 'achievements' },
     { name: 'Contact', href: '#contact', id: 'contact' }
   ];
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/85 dark:bg-[#1a1818]/85 backdrop-blur-md border-b border-black/10 dark:border-white/10 py-3 shadow-md'
-          : 'bg-transparent py-5'
+          ? 'bg-[#090b11]/90 backdrop-blur-xl border-b border-cyan-500/15 py-3 shadow-2xl shadow-cyan-950/40'
+          : 'bg-transparent py-5 sm:py-6'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         
-        {/* Brand Logo */}
+        {/* Brand Logo: Stylized 'A' Monogram + Abhishek Gaur */}
         <a href="#home" className="flex items-center gap-3 group">
-          <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 p-[1.5px] shadow-md shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-shadow">
-            <div className="w-full h-full bg-white dark:bg-[#201d1c] rounded-[10px] flex items-center justify-center">
-              <Cpu className="w-5 h-5 text-blue-600 dark:text-cyan-400 group-hover:rotate-12 transition-transform duration-300" />
+          <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 p-[1.5px] shadow-lg shadow-cyan-500/25 group-hover:shadow-cyan-400/50 transition-shadow">
+            <div className="w-full h-full bg-[#0a0d14] rounded-full flex items-center justify-center font-black text-cyan-400 font-sans text-base tracking-tighter">
+              <span className="bg-gradient-to-b from-cyan-300 via-cyan-400 to-blue-500 bg-clip-text text-transparent transform group-hover:scale-110 transition-transform">
+                A
+              </span>
             </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-cyan-400 transition-colors">
-              Abhishek Gaur
-            </span>
-            <span className="text-[10px] sm:text-[11px] font-mono font-bold text-blue-600 dark:text-cyan-400 uppercase tracking-wider flex items-center gap-1">
-              <Shield className="w-3 h-3" /> ECE · DEFENCE TECH
-            </span>
-          </div>
+          <span className="text-base sm:text-lg font-bold tracking-tight text-white group-hover:text-cyan-300 transition-colors">
+            Abhishek Gaur
+          </span>
         </a>
 
-        {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-1 bg-white/80 dark:bg-[#23201f]/80 border border-black/10 dark:border-white/10 rounded-full px-4 py-1.5 backdrop-blur-md shadow-xs">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 ${
-                activeSection === link.id
-                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold shadow-xs'
-                  : 'text-slate-600 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
-              }`}
-            >
-              {link.name}
-            </a>
-          ))}
+        {/* Center Floating Glassmorphic Capsule Menu */}
+        <nav className="hidden md:flex items-center gap-1 bg-[#10141f]/75 border border-white/10 rounded-full px-3 py-1.5 backdrop-blur-xl shadow-xl shadow-black/40">
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.id;
+            return (
+              <a
+                key={link.name}
+                href={link.href}
+                className={`relative px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 ${
+                  isActive
+                    ? 'text-white font-bold bg-white/10 shadow-inner'
+                    : 'text-neutral-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <span>{link.name}</span>
+                {isActive && (
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-[2px] bg-cyan-400 rounded-full shadow-[0_0_8px_#38bdf8]" />
+                )}
+              </a>
+            );
+          })}
         </nav>
 
-        {/* Right Section: Live Clock & Pull Cord space */}
-        <div className="flex items-center gap-3 pr-14 sm:pr-20">
-          
-          {/* Live IST Local Time Pill */}
-          <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 text-xs font-mono text-slate-700 dark:text-neutral-300 font-semibold shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>{timeStr || 'IST'}</span>
-          </div>
-
-          {/* Social Icon */}
+        {/* Right Action: Let's Connect Button + Mobile Toggle */}
+        <div className="flex items-center gap-3">
           <a
-            href={portfolioData.personal.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub Profile"
-            className="w-9 h-9 rounded-full bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-neutral-200 hover:scale-105 transition-all shadow-xs"
+            href="#contact"
+            className="hidden sm:inline-flex items-center gap-2 px-5 py-2 rounded-full bg-transparent hover:bg-cyan-500/10 text-white hover:text-cyan-300 font-semibold text-xs tracking-wide border border-cyan-400/40 hover:border-cyan-400 shadow-lg shadow-cyan-500/10 transition-all hover:scale-105 active:scale-95"
           >
-            <GithubIcon className="w-4 h-4" />
+            <span>Let's Connect</span>
+            <ArrowRight className="w-3.5 h-3.5 text-cyan-400 transition-transform group-hover:translate-x-0.5" />
           </a>
 
-          {/* Mobile hamburger */}
+          {/* Mobile Menu Hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-            className="lg:hidden p-2 rounded-xl text-slate-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/10"
+            className="md:hidden p-2 rounded-xl bg-white/5 border border-white/10 text-neutral-300 hover:text-white"
+            aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -140,28 +117,28 @@ export default function Navbar() {
 
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white/95 dark:bg-[#1a1818]/95 backdrop-blur-xl border-b border-black/10 dark:border-white/10 px-4 py-6 space-y-3">
-          <div className="flex items-center justify-between pb-3 border-b border-black/10 dark:border-white/10 text-xs font-mono text-slate-500 dark:text-neutral-400">
-            <span>LOCAL TIME</span>
-            <span className="text-emerald-600 font-bold">{timeStr}</span>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`px-3 py-2.5 rounded-xl text-xs font-semibold ${
-                  activeSection === link.id
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-bold'
-                    : 'bg-black/5 dark:bg-white/5 text-slate-700 dark:text-neutral-300'
-                }`}
-              >
-                {link.name}
-              </a>
-            ))}
+        <div className="md:hidden bg-[#0c0f17]/98 backdrop-blur-2xl border-b border-cyan-500/20 px-6 py-6 space-y-3 mt-2 shadow-2xl">
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-4 py-2.5 rounded-xl text-sm font-semibold text-neutral-300 hover:text-white hover:bg-white/5 transition-colors"
+            >
+              {link.name}
+            </a>
+          ))}
+          <div className="pt-2">
+            <a
+              href="#contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-cyan-500 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/30"
+            >
+              <span>Let's Connect</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </a>
           </div>
         </div>
       )}

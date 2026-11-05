@@ -16,11 +16,11 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 
 export default function App() {
-  const [mode, setMode] = useState('light');
+  const [mode, setMode] = useState('dark');
 
   useEffect(() => {
-    // Default to light blue / white theme on initial load
-    const saved = localStorage.getItem('abhishek-theme-mode') || 'light';
+    // Default to 3D cinematic dark theme matching the reference mockup
+    const saved = localStorage.getItem('abhishek-cinematic-theme') || 'dark';
     setMode(saved);
     if (saved === 'dark') {
       document.documentElement.dataset.mode = 'dark';
@@ -41,14 +41,14 @@ export default function App() {
         delete document.documentElement.dataset.mode;
         document.documentElement.classList.remove('dark');
       }
+      localStorage.setItem('abhishek-cinematic-theme', next);
       localStorage.setItem('abhishek-theme-mode', next);
-      localStorage.setItem('abhishek-mode', next);
       return next;
     });
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#eaf4fe] via-[#f4f9ff] to-white dark:from-[#0b1329] dark:via-[#0f172a] dark:to-[#111827] text-slate-900 dark:text-neutral-100 relative selection:bg-blue-600 selection:text-white transition-colors duration-500">
+    <div className="min-h-screen bg-[#06080d] text-slate-100 relative selection:bg-cyan-500 selection:text-slate-950 transition-colors duration-500">
       
       {/* 2D Canvas Ribbon Trail Custom Cursor */}
       <CustomCursor />

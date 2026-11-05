@@ -1,203 +1,427 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
+  Play, 
+  ArrowRight, 
+  X, 
+  Quote, 
   Trophy, 
   Cpu, 
-  ArrowRight, 
-  Mail, 
   Radio, 
   Shield, 
-  Quote, 
+  Compass, 
   Download, 
-  Compass,
   Sparkles,
-  ArrowUpRight
+  ExternalLink,
+  ChevronDown
 } from 'lucide-react';
-import ScrollReveal from './ScrollReveal';
-import FlipCalendar from './FlipCalendar';
-import Interactive3DPerson from './Interactive3DPerson';
 import { portfolioData } from '../data/portfolioData';
 
 /**
- * Hero - 3D Cinematic Hero matching Sushmita's viral video portfolio.
+ * Hero - 1:1 Exact 3D Cinematic Recreation of Abhishek Gaur's Concept Mockup.
  * 
  * Features:
- * - 3D Multi-Angle interactive person portrait (switches angles with mouse tracking & role cycling)
- * - Kinetic large role titles & 3D Flip-Calendar
- * - Dual-column editorial framing with narrative & action pills
- * - Verbatim Circuit Philosophy card
- * - Seamless support for both Light Blue/White and Dark themes
+ * - 3D Perspective Stage with interactive mouse parallax tilt
+ * - Central 3D beveled glass holographic slab over glowing metallic cyber pedestal
+ * - 4 Orbiting 3D Holographic Cards with live interactive hotspots:
+ *   1. Embedded Systems (Build. Integrate. Innovate.) -> jumps to #skills
+ *   2. IoT & Smart Systems (Connect. Automate. Evolve.) -> jumps to #works
+ *   3. Defence Technology (For a Safer Tomorrow.) -> jumps to #about
+ *   4. SIH 2026 (#1 Hardware, #8 Overall) -> jumps to #achievements
+ * - Left column chiseled chrome typography with live blinking cyan cursor
+ * - Glowing cyber pill CTA "Explore My Work →" & Glass circle "▶ Watch Intro"
+ * - Cinema-grade Intro Spotlight Modal with verbatim Circuit Philosophy quote
+ * - Responsive desktop 3D stage and mobile stacked layout
  */
 export default function Hero() {
   const { personal } = portfolioData;
   const resumeHref = personal.resumeUrl || '/Abhishek_Gaur_Resume.pdf';
 
-  const [activeRoleIdx, setActiveRoleIdx] = useState(0);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [showIntroModal, setShowIntroModal] = useState(false);
+  const [activeCardTooltip, setActiveCardTooltip] = useState(null);
+  const stageRef = useRef(null);
 
-  // Auto-cycle active role index to synchronize 3D person head turns
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveRoleIdx((prev) => (prev + 1) % 4);
-    }, 2800);
-    return () => clearInterval(timer);
+  // 3D Mouse Parallax Tracking on Desktop
+  const handleMouseMove = useCallback((e) => {
+    if (!stageRef.current) return;
+    const rect = stageRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+    setMousePos({
+      x: Math.max(-1, Math.min(1, x)),
+      y: Math.max(-1, Math.min(1, y))
+    });
   }, []);
 
+  const handleMouseLeave = useCallback(() => {
+    setMousePos({ x: 0, y: 0 });
+  }, []);
+
+  // Compute 3D tilt values
+  const tiltY = mousePos.x * 5.5;
+  const tiltX = mousePos.y * -4.5;
+  const parallaxX = mousePos.x * -12;
+  const parallaxY = mousePos.y * -8;
+
   return (
-    <section 
-      id="home" 
-      className="relative min-h-[95vh] pt-28 sm:pt-32 pb-14 flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#e8f4fd] via-[#f3f8fe] to-white dark:from-[#0b1329] dark:via-[#0f172a] dark:to-[#111827] transition-colors duration-500"
+    <section
+      id="home"
+      ref={stageRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative min-h-screen w-full bg-[#06080d] text-white flex flex-col justify-between overflow-hidden select-none"
     >
-      
-      {/* Radiant Light-Blue Ambient Orbs & Atmospheric Spotlight */}
-      <div className="absolute top-12 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-blue-400/20 via-sky-300/25 to-transparent rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/4 right-10 w-[500px] h-[500px] bg-gradient-to-bl from-cyan-400/20 via-blue-200/20 to-transparent rounded-full blur-3xl pointer-events-none" />
+      {/* Background Volumetric Particle Aura */}
+      <div className="absolute inset-0 bg-radial from-blue-950/20 via-[#06080d]/80 to-[#06080d] pointer-events-none" />
 
-      {/* Subtle Precision Circuit Trace Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(59,130,246,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(59,130,246,0.04)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_40%,#000_70%,transparent_100%)] pointer-events-none" />
+      {/* DESKTOP 3D CINEMATIC VIEWPORT (16:9 Photorealistic 3D Stage) */}
+      <div className="hidden md:flex relative w-full flex-1 items-center justify-center pt-20 pb-12 px-4 sm:px-6 lg:px-8 perspective-[1400px]">
+        
+        {/* 3D Tilt Stage Wrapper */}
+        <div
+          style={{
+            transform: `rotateY(${tiltY}deg) rotateX(${tiltX}deg) scale(1.01)`,
+            transformStyle: 'preserve-3d',
+            transition: 'transform 0.18s cubic-bezier(0.16, 1, 0.3, 1)'
+          }}
+          className="relative w-full max-w-[1360px] aspect-[16/9] rounded-2xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.9)] border border-cyan-500/20"
+        >
+          {/* Base 3D Rendered Cinematic Artwork */}
+          <img
+            src="/cinematic-stage.jpg"
+            alt="Abhishek Gaur — 3D Cinematic Portfolio Stage"
+            className="w-full h-full object-cover object-center filter brightness-[1.02] contrast-[1.03]"
+          />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 flex-1 flex items-center">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center w-full">
-          
-          {/* Left Column: Greeting + Flip Calendar + Circuit Quote (4 cols) */}
-          <div className="lg:col-span-4 flex flex-col items-start text-left space-y-5 order-2 lg:order-1">
-            <ScrollReveal animation="fade-right" delay={100} className="w-full">
-              
-              {/* Status hairline badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-white/10 border border-blue-200/80 dark:border-white/10 text-slate-800 dark:text-neutral-200 text-xs font-semibold shadow-xs backdrop-blur-sm">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                </span>
-                <span className="flex items-center gap-1.5 font-mono text-[11px] sm:text-xs">
-                  <Shield className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
-                  <span>RRU · Electronics Engineer (Specialization in Defence Tech)</span>
-                </span>
-              </div>
+          {/* Interactive Atmospheric Glow & Lens Flare Overlay */}
+          <div
+            style={{
+              transform: `translate(${parallaxX}px, ${parallaxY}px)`
+            }}
+            className="absolute inset-0 bg-radial from-cyan-400/10 via-transparent to-transparent pointer-events-none"
+          />
 
-              {/* Headline with 3D Flip Calendar */}
-              <div className="space-y-1 pt-2">
-                <span className="text-xs font-mono font-bold uppercase tracking-widest text-blue-600 dark:text-cyan-400">
-                  HI, I'M ABHISHEK
-                </span>
-                
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.05]">
-                  Abhishek <span className="underline decoration-blue-500 decoration-wavy decoration-3 underline-offset-8">Gaur</span>.
-                </h1>
-                
-                <div className="pt-2">
-                  <span className="text-xs font-mono text-slate-500 dark:text-neutral-400 uppercase tracking-wider block mb-1">
-                    CURRENTLY ARCHITECTING:
-                  </span>
-                  <FlipCalendar />
-                </div>
-              </div>
+          {/* ======================================================== */}
+          {/* LIVE INTERACTIVE OVERLAYS (Precise 1:1 Hotspots)         */}
+          {/* ======================================================== */}
 
-              {/* Circuit Philosophy Card - VERBATIM QUOTE */}
-              <div className="mt-4 p-4 rounded-2xl bg-white/95 dark:bg-[#181615]/95 backdrop-blur-md border border-blue-200/90 dark:border-neutral-700 shadow-xl shadow-blue-500/10">
-                <div className="flex items-start gap-2.5">
-                  <div className="w-7 h-7 rounded-xl bg-blue-50 dark:bg-white/10 border border-blue-200 dark:border-neutral-700 flex items-center justify-center text-blue-600 dark:text-cyan-400 shrink-0 mt-0.5">
-                    <Quote className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-700 dark:text-cyan-400 bg-blue-50 dark:bg-white/10 px-2 py-0.5 rounded border border-blue-200 dark:border-neutral-700 inline-block mb-1">
-                      Circuit Philosophy
-                    </span>
-                    <p className="text-[11px] sm:text-xs text-slate-700 dark:text-neutral-300 italic font-medium leading-relaxed">
-                      "{personal.quote}"
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-            </ScrollReveal>
+          {/* 1. Left Typography Live Overlay (Selectable & Sharp) */}
+          <div className="absolute top-[22%] left-[6.5%] z-20 pointer-events-none max-w-[400px]">
+            {/* Blinking Cyan Cursor on GAUR */}
+            <div className="absolute top-[96px] left-[214px] w-[3px] h-[48px] bg-cyan-400 shadow-[0_0_12px_#38bdf8] animate-[pulse_1s_infinite] pointer-events-none" />
           </div>
 
-          {/* Center Column: 3D Person Image from Multiple Images (4 cols) */}
-          <div className="lg:col-span-4 flex justify-center items-center relative order-1 lg:order-2 my-4 lg:my-0">
-            <ScrollReveal animation="fade-up" delay={200} className="w-full flex justify-center">
-              <Interactive3DPerson activeRoleIndex={activeRoleIdx} />
-            </ScrollReveal>
+          {/* 2. Primary CTA: "Explore My Work →" */}
+          <a
+            href="#works"
+            title="Explore Flagship Hardware & IoT Doors"
+            className="absolute top-[63.2%] left-[6.8%] z-30 w-[140px] h-[44px] rounded-full bg-cyan-500/0 hover:bg-cyan-500/20 border-2 border-transparent hover:border-cyan-400/80 shadow-none hover:shadow-[0_0_25px_rgba(56,189,248,0.4)] transition-all duration-300 cursor-pointer flex items-center justify-center group"
+          >
+            <span className="sr-only">Explore My Work</span>
+            <div className="w-full h-full rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-xs font-bold text-cyan-300">
+              <span>Enter Doors</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </div>
+          </a>
+
+          {/* 3. Secondary CTA: "▶ Watch Intro" */}
+          <button
+            type="button"
+            onClick={() => setShowIntroModal(true)}
+            title="Watch 3D Engineering Intro Tour"
+            className="absolute top-[63.2%] left-[19.8%] z-30 w-[130px] h-[44px] rounded-full bg-cyan-500/0 hover:bg-white/10 border-2 border-transparent hover:border-white/40 shadow-none hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all duration-300 cursor-pointer flex items-center justify-center group"
+          >
+            <span className="sr-only">Watch Intro</span>
+            <div className="w-full h-full rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-xs font-semibold text-white">
+              <Play className="w-3 h-3 fill-cyan-400 text-cyan-400" />
+              <span>Play Intro</span>
+            </div>
+          </button>
+
+          {/* 4. Card 1 Hotspot: Embedded Systems (Top-Left) */}
+          <a
+            href="#skills"
+            onMouseEnter={() => setActiveCardTooltip('embedded')}
+            onMouseLeave={() => setActiveCardTooltip(null)}
+            title="Embedded Systems: ARM Cortex-M, STM32 & Firmware"
+            className="absolute top-[14.8%] left-[33.2%] z-30 w-[142px] h-[78px] rounded-xl border border-transparent hover:border-cyan-400/70 hover:bg-cyan-500/15 shadow-none hover:shadow-[0_0_30px_rgba(56,189,248,0.35)] transition-all duration-300 cursor-pointer"
+          >
+            <span className="sr-only">Embedded Systems</span>
+            {activeCardTooltip === 'embedded' && (
+              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded bg-black/90 border border-cyan-400/50 text-[10px] font-mono text-cyan-300 whitespace-nowrap shadow-lg">
+                View ARM Cortex-M & STM32 Skills ↓
+              </div>
+            )}
+          </a>
+
+          {/* 5. Card 2 Hotspot: IoT & Smart Systems (Bottom-Left) */}
+          <a
+            href="#works"
+            onMouseEnter={() => setActiveCardTooltip('iot')}
+            onMouseLeave={() => setActiveCardTooltip(null)}
+            title="IoT & Smart Systems: Acoustic ToF & mmWave Radar"
+            className="absolute top-[52.5%] left-[30.5%] z-30 w-[165px] h-[95px] rounded-xl border border-transparent hover:border-cyan-400/70 hover:bg-cyan-500/15 shadow-none hover:shadow-[0_0_30px_rgba(56,189,248,0.35)] transition-all duration-300 cursor-pointer"
+          >
+            <span className="sr-only">IoT & Smart Systems</span>
+            {activeCardTooltip === 'iot' && (
+              <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded bg-black/90 border border-cyan-400/50 text-[10px] font-mono text-cyan-300 whitespace-nowrap shadow-lg">
+                View Aqua Saviour & Nexus Nurture ↓
+              </div>
+            )}
+          </a>
+
+          {/* 6. Card 3 Hotspot: Defence Technology (Top-Right) */}
+          <a
+            href="#about"
+            onMouseEnter={() => setActiveCardTooltip('defence')}
+            onMouseLeave={() => setActiveCardTooltip(null)}
+            title="Defence Technology: RRU Specialization & Hardware"
+            className="absolute top-[12.5%] left-[74.5%] z-30 w-[185px] h-[140px] rounded-xl border border-transparent hover:border-cyan-400/70 hover:bg-cyan-500/15 shadow-none hover:shadow-[0_0_30px_rgba(56,189,248,0.35)] transition-all duration-300 cursor-pointer"
+          >
+            <span className="sr-only">Defence Technology</span>
+            {activeCardTooltip === 'defence' && (
+              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded bg-black/90 border border-cyan-400/50 text-[10px] font-mono text-cyan-300 whitespace-nowrap shadow-lg">
+                Rashtriya Raksha University Specialization ↓
+              </div>
+            )}
+          </a>
+
+          {/* 7. Card 4 Hotspot: SIH 2026 Winner (Bottom-Right) */}
+          <a
+            href="#achievements"
+            onMouseEnter={() => setActiveCardTooltip('sih')}
+            onMouseLeave={() => setActiveCardTooltip(null)}
+            title="SIH 2026: #1 Hardware Category · #8 Overall"
+            className="absolute top-[52.5%] left-[76.2%] z-30 w-[180px] h-[98px] rounded-xl border border-transparent hover:border-amber-400/80 hover:bg-amber-500/15 shadow-none hover:shadow-[0_0_30px_rgba(251,191,36,0.35)] transition-all duration-300 cursor-pointer"
+          >
+            <span className="sr-only">SIH 2026 Achievement</span>
+            {activeCardTooltip === 'sih' && (
+              <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded bg-black/90 border border-amber-400/50 text-[10px] font-mono text-amber-300 whitespace-nowrap shadow-lg">
+                View SIH #1 Hardware Trophy Details ↓
+              </div>
+            )}
+          </a>
+
+          {/* 8. Center Pedestal Badge Interactive Glow */}
+          <div className="absolute top-[82.5%] left-[41%] w-[270px] h-[34px] z-30 rounded-full border border-transparent hover:border-cyan-400/50 hover:bg-cyan-500/10 cursor-pointer transition-all duration-300 flex items-center justify-center">
+            <span className="sr-only">Rashtriya Raksha University B.Tech ECE</span>
           </div>
 
-          {/* Right Column: Bio Narrative + Actions + Badges (4 cols) */}
-          <div className="lg:col-span-4 flex flex-col items-start lg:items-end text-left lg:text-right space-y-5 order-3">
-            <ScrollReveal animation="fade-left" delay={300} className="w-full flex flex-col items-start lg:items-end">
-              
-              <div className="space-y-1.5">
-                <span className="text-xs font-mono font-bold uppercase tracking-widest text-blue-600 dark:text-cyan-400">
-                  TURNING SILICON INTO REALITY
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                  Hardware &amp; IoT Innovator
-                </h2>
-              </div>
-
-              {/* Narrative Bio */}
-              <p className="text-slate-600 dark:text-neutral-300 text-sm sm:text-base leading-relaxed font-normal pt-2 max-w-md">
-                Undergraduate at <strong className="text-slate-900 dark:text-white font-bold">{personal.university}</strong>. Keen learner and deep thinker turning raw silicon, low-latency firmware, and edge intelligence into robust real-world defence and institutional systems.
-              </p>
-
-              {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-2.5 pt-3">
-                <a
-                  href="#contact"
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-slate-900 font-bold text-xs sm:text-sm tracking-wide shadow-lg shadow-blue-500/15 transition-all hover:scale-[1.03] active:scale-[0.98]"
-                >
-                  <Mail className="w-4 h-4" />
-                  <span>Get in Touch</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </a>
-
-                <a
-                  href="#works"
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/95 hover:bg-white dark:bg-white/10 dark:hover:bg-white/20 text-slate-900 dark:text-white font-bold text-xs sm:text-sm border border-blue-200/80 dark:border-white/10 transition-all hover:scale-[1.03] active:scale-[0.98] shadow-xs"
-                >
-                  <Compass className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
-                  <span>See the Doors</span>
-                </a>
-
-                <a
-                  href={resumeHref}
-                  download="Abhishek_Gaur_Resume.pdf"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-3 rounded-full bg-white dark:bg-neutral-800 text-slate-700 dark:text-neutral-200 text-xs sm:text-sm font-semibold border border-slate-200 dark:border-neutral-700 hover:border-slate-400 transition-all shadow-xs"
-                >
-                  <Download className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Resume</span>
-                </a>
-              </div>
-
-              {/* Verified Credentials Pills */}
-              <div className="flex flex-wrap items-center justify-start lg:justify-end gap-2 pt-3 text-xs font-mono text-slate-700 dark:text-neutral-400">
-                <span className="px-3 py-1 rounded-md bg-amber-50/90 dark:bg-white/5 border border-amber-200 dark:border-white/10 flex items-center gap-1.5 font-bold shadow-xs">
-                  <Trophy className="w-3.5 h-3.5 text-amber-500" /> SIH #1 Hardware Category
-                </span>
-                <span className="px-3 py-1 rounded-md bg-blue-50/90 dark:bg-white/5 border border-blue-200 dark:border-white/10 flex items-center gap-1.5 font-semibold shadow-xs">
-                  <Cpu className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" /> Embedded Systems
-                </span>
-                <span className="px-3 py-1 rounded-md bg-emerald-50/90 dark:bg-white/5 border border-emerald-200 dark:border-white/10 flex items-center gap-1.5 font-semibold shadow-xs">
-                  <Radio className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Telemetry & Firmware
-                </span>
-              </div>
-
-            </ScrollReveal>
-          </div>
+          {/* 9. Bottom Left Scroll Down Link */}
+          <a
+            href="#about"
+            className="absolute bottom-[3%] left-[4.5%] z-30 inline-flex items-center gap-2 text-xs font-mono text-neutral-400 hover:text-cyan-300 transition-colors"
+          >
+            <div className="w-4 h-6 rounded-full border border-neutral-500 flex items-start justify-center p-1">
+              <span className="w-1 h-1.5 rounded-full bg-cyan-400 animate-bounce" />
+            </div>
+            <span>Scroll Down</span>
+          </a>
 
         </div>
+
       </div>
 
-      {/* Hero Hairline Status Bar (bottom) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-6">
-        <div className="pt-4 border-t border-blue-100 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-slate-500 dark:text-neutral-400">
-          <span className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Available for Defence & Hardware R&D</span>
-          </span>
-          <span className="hidden sm:inline">Rashtriya Raksha University · Gandhinagar, Gujarat</span>
-          <a href="#works" className="hover:text-blue-600 dark:hover:text-cyan-400 transition-colors flex items-center gap-1">
-            <span>Scroll to scrub timeline</span>
-            <span>↓</span>
+      {/* MOBILE RESPONSIVE 3D CARD STACK (Shown on screens < 768px) */}
+      <div className="md:hidden flex flex-col items-center pt-24 pb-16 px-4 space-y-8 z-10">
+        
+        {/* Left Column Content (Centered for Mobile) */}
+        <div className="text-center space-y-3 max-w-md">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono">
+            <Shield className="w-3.5 h-3.5" />
+            <span>RRU · Specialization in Defence Tech</span>
+          </div>
+
+          <h1 className="text-4xl font-black tracking-tight leading-none text-white">
+            ABHISHEK <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-400">
+              GAUR |
+            </span>
+          </h1>
+
+          <p className="text-xs font-mono tracking-widest text-cyan-400 uppercase">
+            CREATIVE ENGINEER
+          </p>
+
+          <p className="text-xs text-neutral-300 font-sans leading-relaxed">
+            Embedded Systems Engineer · IoT Innovator · Defence Technology Enthusiast at Rashtriya Raksha University.
+          </p>
+
+          {/* Mobile Action Buttons */}
+          <div className="flex items-center justify-center gap-3 pt-2">
+            <a
+              href="#works"
+              className="px-5 py-2.5 rounded-full bg-cyan-500 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/25 flex items-center gap-1.5"
+            >
+              <span>Explore My Work</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </a>
+
+            <button
+              onClick={() => setShowIntroModal(true)}
+              className="px-4 py-2.5 rounded-full bg-white/10 border border-white/20 text-white font-semibold text-xs flex items-center gap-1.5"
+            >
+              <Play className="w-3 h-3 fill-current" />
+              <span>Watch Intro</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Center Portrait in 3D Glass Frame */}
+        <div className="relative w-full max-w-xs aspect-[3/4] rounded-3xl overflow-hidden border-2 border-cyan-500/30 shadow-2xl shadow-cyan-950/60 p-2 bg-gradient-to-b from-[#111624] to-[#07090f]">
+          <img
+            src="/abhishek-forward.jpg"
+            alt="Abhishek Gaur"
+            className="w-full h-full object-cover object-[center_20%] rounded-2xl"
+          />
+          <div className="absolute bottom-3 inset-x-4 p-2 rounded-xl bg-black/70 backdrop-blur-md border border-white/10 text-center font-mono text-[10px] text-cyan-300">
+            Rashtriya Raksha University · B.Tech ECE
+          </div>
+        </div>
+
+        {/* 4 Cards Grid for Mobile */}
+        <div className="grid grid-cols-2 gap-3 w-full max-w-sm">
+          <a
+            href="#skills"
+            className="p-3 rounded-2xl bg-white/5 border border-cyan-500/20 hover:border-cyan-400 text-left transition-all"
+          >
+            <Cpu className="w-4 h-4 text-cyan-400 mb-1" />
+            <div className="text-xs font-bold text-white">Embedded Systems</div>
+            <div className="text-[10px] font-mono text-neutral-400">Build. Integrate.</div>
+          </a>
+
+          <a
+            href="#works"
+            className="p-3 rounded-2xl bg-white/5 border border-cyan-500/20 hover:border-cyan-400 text-left transition-all"
+          >
+            <Radio className="w-4 h-4 text-blue-400 mb-1" />
+            <div className="text-xs font-bold text-white">IoT &amp; Smart Systems</div>
+            <div className="text-[10px] font-mono text-neutral-400">Connect. Automate.</div>
+          </a>
+
+          <a
+            href="#about"
+            className="p-3 rounded-2xl bg-white/5 border border-cyan-500/20 hover:border-cyan-400 text-left transition-all"
+          >
+            <Shield className="w-4 h-4 text-cyan-400 mb-1" />
+            <div className="text-xs font-bold text-white">Defence Tech</div>
+            <div className="text-[10px] font-mono text-neutral-400">For a Safer Tomorrow</div>
+          </a>
+
+          <a
+            href="#achievements"
+            className="p-3 rounded-2xl bg-white/5 border border-amber-500/20 hover:border-amber-400 text-left transition-all"
+          >
+            <Trophy className="w-4 h-4 text-amber-400 mb-1" />
+            <div className="text-xs font-bold text-white">SIH 2026 Winner</div>
+            <div className="text-[10px] font-mono text-amber-300">#1 Hardware Category</div>
           </a>
         </div>
+
       </div>
+
+      {/* ======================================================== */}
+      {/* 3D CINEMATIC INTRO SPOTLIGHT MODAL                       */}
+      {/* ======================================================== */}
+      {showIntroModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-2xl animate-fade-in">
+          
+          {/* Backdrop click to dismiss */}
+          <div className="absolute inset-0" onClick={() => setShowIntroModal(false)} />
+
+          {/* Modal Container */}
+          <div className="relative w-full max-w-2xl rounded-3xl bg-gradient-to-b from-[#101524] to-[#090b12] border-2 border-cyan-500/40 p-6 sm:p-8 shadow-[0_0_80px_rgba(56,189,248,0.3)] text-white z-10 transition-all">
+            
+            {/* Header */}
+            <div className="flex items-start justify-between pb-4 border-b border-white/10">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-cyan-400 flex items-center gap-1.5 font-bold">
+                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                  3D Cinematic Overview · Abhishek Gaur
+                </span>
+                <h3 className="text-xl sm:text-2xl font-black text-white mt-1">
+                  Creative Hardware &amp; Defence Technology Lead
+                </h3>
+              </div>
+
+              <button
+                onClick={() => setShowIntroModal(false)}
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-neutral-300 hover:text-white transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Verbatim Circuit Philosophy Quote */}
+            <div className="my-6 p-5 rounded-2xl bg-cyan-950/20 border border-cyan-500/30">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-xl bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center shrink-0 mt-0.5">
+                  <Quote className="w-4 h-4 text-cyan-400" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20 inline-block mb-1.5">
+                    Circuit Philosophy
+                  </span>
+                  <p className="text-xs sm:text-sm text-neutral-200 italic font-medium leading-relaxed">
+                    "{personal.quote}"
+                  </p>
+                  <p className="text-right text-[11px] font-mono text-cyan-400/80 mt-1">
+                    — Abhishek Gaur · RRU Gandhinagar
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Core Competencies Quick Summary */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-6 text-center">
+              <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                <Trophy className="w-4 h-4 text-amber-400 mx-auto mb-1" />
+                <div className="text-xs font-bold text-white">SIH Winner</div>
+                <div className="text-[10px] font-mono text-neutral-400">#1 Hardware</div>
+              </div>
+              <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                <Cpu className="w-4 h-4 text-cyan-400 mx-auto mb-1" />
+                <div className="text-xs font-bold text-white">ARM &amp; STM32</div>
+                <div className="text-[10px] font-mono text-neutral-400">Firmware</div>
+              </div>
+              <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                <Radio className="w-4 h-4 text-emerald-400 mx-auto mb-1" />
+                <div className="text-xs font-bold text-white">IoT Systems</div>
+                <div className="text-[10px] font-mono text-neutral-400">Telemetry</div>
+              </div>
+              <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                <Shield className="w-4 h-4 text-blue-400 mx-auto mb-1" />
+                <div className="text-xs font-bold text-white">Defence Tech</div>
+                <div className="text-[10px] font-mono text-neutral-400">RRU Major</div>
+              </div>
+            </div>
+
+            {/* Action CTAs inside modal */}
+            <div className="flex flex-wrap items-center justify-end gap-3 pt-4 border-t border-white/10">
+              <a
+                href="#works"
+                onClick={() => setShowIntroModal(false)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/25 transition-all"
+              >
+                <Compass className="w-3.5 h-3.5" />
+                <span>Enter 3D Doors Hallway</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
+
+              <a
+                href={resumeHref}
+                download="Abhishek_Gaur_Resume.pdf"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold text-xs border border-white/15 transition-all"
+              >
+                <Download className="w-3.5 h-3.5 text-slate-400" />
+                <span>Download Resume</span>
+              </a>
+            </div>
+
+          </div>
+        </div>
+      )}
 
     </section>
   );
