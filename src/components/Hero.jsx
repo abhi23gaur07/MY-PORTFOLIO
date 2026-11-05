@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   ArrowRight, 
   Cpu, 
@@ -8,8 +8,6 @@ import {
   Globe,
   Play, 
   Pause,
-  Box,
-  Film,
   Sparkles,
   X,
   Quote,
@@ -19,11 +17,10 @@ import {
   Compass,
   Terminal
 } from 'lucide-react';
+import { GithubIcon, LinkedinIcon } from './Icons';
 import { portfolioData } from '../data/portfolioData';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-const HeroAvatar = lazy(() => import('./HeroAvatar'));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -49,7 +46,6 @@ export default function Hero({ mode = 'dark' }) {
   const isDark = mode === 'dark';
   
   const [isPlaying, setIsPlaying] = useState(true);
-  const [viewMode, setViewMode] = useState('video'); // 'video' | 'avatar'
   const [showIntroModal, setShowIntroModal] = useState(false);
   const [mouseParallax, setMouseParallax] = useState({ x: 0, y: 0 });
 
@@ -78,7 +74,7 @@ export default function Hero({ mode = 'dark' }) {
           });
       }
     }
-  }, [viewMode]);
+  }, []);
 
   const toggleVideoPlayback = (e) => {
     e.stopPropagation();
@@ -181,7 +177,7 @@ export default function Hero({ mode = 'dark' }) {
     }, heroRef);
 
     return () => ctx.revert();
-  }, [viewMode, isDark]);
+  }, [isDark]);
 
   return (
     <section
@@ -193,46 +189,34 @@ export default function Hero({ mode = 'dark' }) {
       {/* CINEMATIC HERO BACKGROUND (HIGH RESOLUTION VIDEO)         */}
       {/* ======================================================== */}
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        {/* Real Background Video of Abhishek walking on circular stage */}
+        <video
+          ref={videoRef}
+          src="/hero_video.mp4"
+          poster="/hero_mockup.jpg"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover object-[center_35%] lg:object-center select-none will-change-transform"
+          style={{
+            filter: 'contrast(1.08) brightness(1.03) saturate(1.08)',
+            imageRendering: 'high-quality',
+            WebkitBackfaceVisibility: 'hidden',
+            transform: `translate3d(${mouseParallax.x * 6}px, ${mouseParallax.y * 5}px, 0)`
+          }}
+        />
+
+        {/* Seamless Edge Blending - Subtle dark vignettes so video is 100% visible in all modes */}
+        {/* Top Vignette for Navbar legibility */}
+        <div className="absolute top-0 left-0 right-0 h-28 pointer-events-none bg-gradient-to-b from-[#05070c]/70 via-[#05070c]/20 to-transparent" />
         
-        {viewMode === 'video' ? (
-          <>
-            {/* Real Background Video of Abhishek walking on circular stage */}
-            <video
-              ref={videoRef}
-              src="/hero_video.mp4"
-              poster="/hero_mockup.jpg"
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              className="absolute inset-0 w-full h-full object-cover object-[center_35%] lg:object-center select-none will-change-transform"
-              style={{
-                filter: 'contrast(1.08) brightness(1.03) saturate(1.08)',
-                imageRendering: 'high-quality',
-                WebkitBackfaceVisibility: 'hidden',
-                transform: `translate3d(${mouseParallax.x * 6}px, ${mouseParallax.y * 5}px, 0)`
-              }}
-            />
+        {/* Bottom Vignette for seamless merge into AboutMe */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none bg-gradient-to-t from-[#05070c]/90 via-[#05070c]/40 to-transparent" />
 
-            {/* Seamless Edge Blending - Subtle dark vignettes so video is 100% visible in all modes */}
-            {/* Top Vignette for Navbar legibility */}
-            <div className="absolute top-0 left-0 right-0 h-28 pointer-events-none bg-gradient-to-b from-[#05070c]/70 via-[#05070c]/20 to-transparent" />
-            
-            {/* Bottom Vignette for seamless merge into AboutMe */}
-            <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none bg-gradient-to-t from-[#05070c]/90 via-[#05070c]/40 to-transparent" />
-
-            {/* Subtle Ambient Radial Glow */}
-            <div className="absolute bottom-[28%] left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-[120px] pointer-events-none bg-amber-500/10" />
-          </>
-        ) : (
-          /* 3D WebGL Avatar Mode (Alternate view) */
-          <div className="absolute inset-0 w-full h-full flex items-center justify-end pr-[10%]">
-            <Suspense fallback={null}>
-              <HeroAvatar />
-            </Suspense>
-          </div>
-        )}
+        {/* Subtle Ambient Radial Glow */}
+        <div className="absolute bottom-[28%] left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-[120px] pointer-events-none bg-amber-500/10" />
       </div>
 
       {/* Spacer for Top Navbar */}
@@ -284,40 +268,70 @@ export default function Hero({ mode = 'dark' }) {
             {/* Subtle Horizontal Divider Line */}
             <div className="w-36 sm:w-48 h-[2px] rounded-full my-5 sm:my-6 bg-gradient-to-r from-amber-400 via-cyan-400 to-transparent shadow-[0_0_12px_#38bdf8]" />
 
-            {/* Call to Action Buttons: EXPLORE MY WORK → + RESUME ⤓ */}
-            <div className="flex flex-wrap items-center gap-3.5">
-              <a
-                href="#doors"
-                className="group relative inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 hover:border-cyan-400/90 shadow-[0_0_20px_rgba(245,158,11,0.2)] text-white font-mono text-xs sm:text-sm font-bold tracking-[0.2em] uppercase backdrop-blur-md transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_8px_#f59e0b] group-hover:bg-cyan-300 transition-colors" />
-                <span className="font-mono text-xs sm:text-sm font-bold tracking-[0.2em] uppercase">
-                  EXPLORE MY WORK
-                </span>
-                <ArrowRight className="w-4 h-4 text-neutral-300 group-hover:text-cyan-300 transition-all group-hover:translate-x-1.5" />
-              </a>
+            {/* Call to Action: Primary Button & Social Links Below */}
+            <div className="flex flex-col items-start gap-3 w-full">
+              {/* Primary Action Button: EXPLORE MY WORK */}
+              <div>
+                <a
+                  href="#doors"
+                  className="group relative inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 hover:border-cyan-400/90 shadow-[0_0_20px_rgba(245,158,11,0.2)] text-white font-mono text-xs sm:text-sm font-bold tracking-[0.2em] uppercase backdrop-blur-md transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_8px_#f59e0b] group-hover:bg-cyan-300 transition-colors" />
+                  <span className="font-mono text-xs sm:text-sm font-bold tracking-[0.2em] uppercase">
+                    EXPLORE MY WORK
+                  </span>
+                  <ArrowRight className="w-4 h-4 text-neutral-300 group-hover:text-cyan-300 transition-all group-hover:translate-x-1.5" />
+                </a>
+              </div>
 
-              {/* Direct Resume Download in Hero */}
-              <a
-                href={resumeHref}
-                download="Abhishek_Gaur_Resume.pdf"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/5 hover:bg-white/15 text-cyan-300 hover:text-white border border-cyan-400/40 hover:border-cyan-300 font-mono text-xs sm:text-sm font-bold tracking-[0.18em] uppercase backdrop-blur-md transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] cursor-pointer shadow-[0_0_15px_rgba(56,189,248,0.15)]"
-                title="Download Abhishek Gaur's Resume"
-              >
-                <Download className="w-4 h-4 text-cyan-400" />
-                <span>RESUME</span>
-              </a>
+              {/* Sub-row Directly Below EXPLORE MY WORK: RESUME, GITHUB, LINKEDIN (Same style as RESUME) */}
+              <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-0.5">
+                {/* Direct Resume Download */}
+                <a
+                  href={resumeHref}
+                  download="Abhishek_Gaur_Resume.pdf"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/5 hover:bg-white/15 text-cyan-300 hover:text-white border border-cyan-400/40 hover:border-cyan-300 font-mono text-xs font-bold tracking-[0.16em] uppercase backdrop-blur-md transition-all duration-300 hover:scale-[1.04] active:scale-[0.98] cursor-pointer shadow-[0_0_15px_rgba(56,189,248,0.15)]"
+                  title="Download Abhishek Gaur's Resume"
+                >
+                  <Download className="w-4 h-4 text-cyan-400" />
+                  <span>RESUME</span>
+                </a>
 
-              {/* Quick Info Modal Trigger */}
-              <button
-                type="button"
-                onClick={() => setShowIntroModal(true)}
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer bg-white/5 hover:bg-white/15 border border-white/20 text-neutral-300 hover:text-white hover:border-cyan-400/60 backdrop-blur-md"
-                title="View Engineering Profile"
-                aria-label="View Engineering Profile"
-              >
-                <Sparkles className="w-4 h-4 text-amber-400" />
-              </button>
+                {/* GitHub Symbol / Pill */}
+                <a
+                  href={personal.github || "https://github.com/abhi23gaur07"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/5 hover:bg-white/15 text-slate-200 hover:text-white border border-white/20 hover:border-cyan-400/60 font-mono text-xs font-bold tracking-[0.16em] uppercase backdrop-blur-md transition-all duration-300 hover:scale-[1.04] active:scale-[0.98] cursor-pointer shadow-[0_0_15px_rgba(255,255,255,0.08)]"
+                  title="Abhishek Gaur's GitHub Profile"
+                >
+                  <GithubIcon className="w-4 h-4 text-slate-300" />
+                  <span>GITHUB</span>
+                </a>
+
+                {/* LinkedIn Symbol / Pill */}
+                <a
+                  href={personal.linkedin || "https://www.linkedin.com/in/abhishek-gaur-855a3b388/?isSelfProfile=true"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/5 hover:bg-white/15 text-sky-400 hover:text-white border border-sky-400/40 hover:border-sky-300 font-mono text-xs font-bold tracking-[0.16em] uppercase backdrop-blur-md transition-all duration-300 hover:scale-[1.04] active:scale-[0.98] cursor-pointer shadow-[0_0_15px_rgba(56,189,248,0.15)]"
+                  title="Abhishek Gaur's LinkedIn Profile"
+                >
+                  <LinkedinIcon className="w-4 h-4 text-sky-400" />
+                  <span>LINKEDIN</span>
+                </a>
+
+                {/* Quick Info Modal Trigger */}
+                <button
+                  type="button"
+                  onClick={() => setShowIntroModal(true)}
+                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer bg-white/5 hover:bg-white/15 border border-white/20 text-neutral-300 hover:text-white hover:border-cyan-400/60 backdrop-blur-md"
+                  title="View Engineering Profile"
+                  aria-label="View Engineering Profile"
+                >
+                  <Sparkles className="w-4 h-4 text-amber-400" />
+                </button>
+              </div>
             </div>
 
           </div>
@@ -484,26 +498,16 @@ export default function Hero({ mode = 'dark' }) {
           <div className="w-[1px] h-6 mt-2 bg-gradient-to-b from-neutral-400/80 to-transparent" />
         </div>
 
-        {/* Right: Switch Mode (Cinematic Video vs 3D Avatar) */}
+        {/* Right: Quick Action to Featured Projects */}
         <div className="flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => setViewMode(prev => prev === 'video' ? 'avatar' : 'video')}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 text-[11px] font-mono transition-all backdrop-blur-md cursor-pointer bg-black/40 hover:bg-black/60 text-neutral-200 hover:text-white"
-            title="Toggle between cinematic video and interactive 3D WebGL avatar"
+          <a
+            href="#doors"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 text-[11px] font-mono transition-all backdrop-blur-md cursor-pointer bg-black/40 hover:bg-black/60 text-neutral-200 hover:text-cyan-300 shadow-sm"
+            title="Explore 3D Architectural Doors & Projects"
           >
-            {viewMode === 'video' ? (
-              <>
-                <Box className="w-3 h-3 text-cyan-400" />
-                <span className="hidden sm:inline">SWITCH TO 3D AVATAR</span>
-              </>
-            ) : (
-              <>
-                <Film className="w-3 h-3 text-amber-400" />
-                <span className="hidden sm:inline">SWITCH TO VIDEO</span>
-              </>
-            )}
-          </button>
+            <Sparkles className="w-3 h-3 text-cyan-400" />
+            <span className="hidden sm:inline">VIEW PROJECTS</span>
+          </a>
         </div>
 
       </div>

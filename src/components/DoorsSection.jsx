@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { portfolioData } from '../data/portfolioData';
 import DoorModal from './DoorModal';
 import ScrollReveal from './ScrollReveal';
-import { ArrowRight, Sparkles, Key, Compass, Shield } from 'lucide-react';
+import { ArrowRight, Sparkles, Key, Compass, Shield, Download } from 'lucide-react';
+import { GithubIcon, LinkedinIcon } from './Icons';
 
 /**
  * DoorsSection - 3D Doors Hallway ("Magic happens behind the doors").
  * Replicates the signature viral architectural doors from Rishi Thakor's portfolio (therishithakor.com).
  */
 export default function DoorsSection() {
-  const { projects } = portfolioData;
+  const { projects, personal } = portfolioData;
   const [hoveredIndex, setHoveredIndex] = useState(-1);
   const [activeModalProject, setActiveModalProject] = useState(null);
   const [pressedIndex, setPressedIndex] = useState(-1);
@@ -135,7 +136,7 @@ export default function DoorsSection() {
       <div className="max-w-7xl mx-auto relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20 space-y-3">
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 space-y-3">
           <ScrollReveal animation="fade-down" delay={50}>
             <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-widest bg-black/5 dark:bg-white/10 text-slate-700 dark:text-neutral-300 border border-black/10 dark:border-white/10">
               <Compass className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
@@ -155,14 +156,52 @@ export default function DoorsSection() {
               Hover to crack open · Click to step through into the room
             </p>
           </ScrollReveal>
+
+          {/* Social Links (GitHub, LinkedIn, Resume) in the space between Magic Happens and Doors */}
+          <ScrollReveal animation="fade-up" delay={260}>
+            <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 pt-3">
+              <a
+                href={personal?.github || "https://github.com/abhi23gaur07"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-mono text-xs font-bold tracking-wider uppercase backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-95 bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20 text-slate-800 dark:text-neutral-200 border border-black/10 dark:border-white/15 shadow-xs"
+                title="Abhishek Gaur's GitHub Profile"
+              >
+                <GithubIcon className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />
+                <span>GITHUB</span>
+              </a>
+
+              <a
+                href={personal?.linkedin || "https://www.linkedin.com/in/abhishek-gaur-855a3b388/?isSelfProfile=true"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-mono text-xs font-bold tracking-wider uppercase backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-95 bg-sky-500/10 hover:bg-sky-500/20 text-sky-700 dark:text-sky-300 border border-sky-500/30 shadow-xs"
+                title="Abhishek Gaur's LinkedIn Profile"
+              >
+                <LinkedinIcon className="w-3.5 h-3.5 text-sky-500" />
+                <span>LINKEDIN</span>
+              </a>
+
+              <a
+                href={personal?.resumeUrl || "/Abhishek_Gaur_Resume.pdf"}
+                download="Abhishek_Gaur_Resume.pdf"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-mono text-xs font-bold tracking-wider uppercase backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-95 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 shadow-xs"
+                title="Download Abhishek Gaur's Resume"
+              >
+                <Download className="w-3.5 h-3.5 text-amber-500" />
+                <span>RESUME</span>
+              </a>
+            </div>
+          </ScrollReveal>
         </div>
 
         {/* Dynamic Wall Description (Slides in when a door is hovered) */}
         <div
-          className={`mx-auto max-w-2xl mb-12 p-5 sm:p-6 rounded-2xl bg-white/90 dark:bg-[#201d1c]/90 backdrop-blur-md border border-[#c9beba] dark:border-[#38312f] shadow-xl transition-all duration-300 ${
-            activeDoor ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-2 pointer-events-none'
+          className={`mx-auto max-w-2xl transition-all duration-300 overflow-hidden ${
+            activeDoor 
+              ? 'opacity-100 max-h-48 mb-8 p-5 sm:p-6 rounded-2xl bg-white/95 dark:bg-[#201d1c]/95 backdrop-blur-md border border-[#c9beba] dark:border-[#38312f] shadow-xl' 
+              : 'opacity-0 max-h-0 mb-4 p-0 border-0 pointer-events-none'
           }`}
-          style={{ minHeight: '120px' }}
         >
           {activeDoor && (
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
