@@ -16,7 +16,8 @@ import {
   Radio,
   Trophy,
   Download,
-  Compass
+  Compass,
+  Terminal
 } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import gsap from 'gsap';
@@ -389,7 +390,7 @@ export default function Hero() {
                   </div>
                 </a>
 
-                {/* Row 3: HARDWARE PROFICIENCY */}
+                {/* Row 3: HARDWARE PROFICIENCY (ESP32, Arduino, Raspberry Pi, STM32) */}
                 <a
                   href="#skills"
                   className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item cursor-pointer border border-transparent hover:border-blue-400/30"
@@ -402,25 +403,25 @@ export default function Hero() {
                       HARDWARE PROFICIENCY
                     </span>
                     <span className="text-[10px] font-mono text-blue-400 font-semibold block">
-                      ARM Cortex · STM32 · KiCad PCB
+                      ESP32 · Arduino · Raspberry Pi · STM32
                     </span>
                   </div>
                 </a>
 
-                {/* Row 4: DEFENCE TECH & SIH WINNER */}
+                {/* Row 4: EMBEDDED C/C++ ARCHITECTURE & IoT PROFICIENCY */}
                 <a
                   href="#achievements"
                   className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors group/item cursor-pointer border border-transparent hover:border-amber-400/30"
                 >
                   <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-400/40 flex items-center justify-center shrink-0 group-hover/item:border-amber-300 transition-colors">
-                    <Shield className="w-4 h-4 text-amber-300" />
+                    <Terminal className="w-4 h-4 text-amber-300" />
                   </div>
                   <div className="min-w-0">
                     <span className="font-mono text-xs sm:text-sm font-bold tracking-[0.14em] text-white group-hover/item:text-amber-300 transition-colors uppercase block">
-                      DEFENCE TECH &amp; SIH WINNER
+                      EMBEDDED C/C++ &amp; IoT
                     </span>
                     <span className="text-[10px] font-mono text-amber-400 font-semibold block">
-                      RRU Major · #1 Hardware National
+                      C/C++ Architecture · SIH #1 Hardware Category
                     </span>
                   </div>
                 </a>

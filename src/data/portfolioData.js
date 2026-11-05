@@ -13,8 +13,8 @@ export const portfolioData = {
     linkedin: "https://www.linkedin.com/in/abhishek-gaur-855a3b388/?isSelfProfile=true",
     avatar: "/profile.jpg",
     resumeUrl: "/Abhishek_Gaur_Resume.pdf",
-    bio: "Hi, I'm Abhishek Gaur — a B.Tech Electronics Engineering undergraduate with a Specialization in Defence Technology at Rashtriya Raksha University (RRU). Keen learner and a Deep Thinker, currently working on embedded systems and IOT projects, with a focused portfolio consisting of curated, high-impact projects.",
-    quote: "Be a living electronic circuit. Practice resistance where needed, like a resistor. Preserve energy where needed, like a capacitor. Direct energy where needed, like a diode. And above all, be driven by a purpose, like an IC.",
+    bio: "Full Stack & Embedded IoT Developer bridging physical hardware and web applications. Experienced in developing responsive, real-time dashboards and interfacing microcontrollers with scalable cloud backends using modern JavaScript, C/C++, and IoT protocols. Committed to building robust, data-driven connected products that deliver measurable real-world impact.",
+    quote: "Be a living electronic circuit: Practice resistance where needed, like a Resistor. Preserve energy where needed, like a Capacitor. Direct energy where needed, like a Diode. And above all, be driven by a purpose, like an Integrated Circuit.",
     stats: [
       { label: "Institution", value: "RRU", context: "National Importance Institute" },
       { label: "Official Major", value: "Defence Tech", context: "B.Tech Electronics @ RRU" },
