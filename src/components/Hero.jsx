@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Play, 
   ArrowRight, 
@@ -14,6 +14,10 @@ import {
   ChevronDown
 } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Custom Precision SVG Icons matching the reference mockup
 function RoboticArmIcon({ className = "w-5 h-5" }) {
@@ -35,35 +39,97 @@ function RoboticArmIcon({ className = "w-5 h-5" }) {
 }
 
 /**
- * Hero - Cinematic Editorial Widescreen Stage.
+ * Hero - Cinematic Split Composition (Left 55% Typography | Right 45% Large 3D Avatar).
  * 
- * Works hand-in-hand with CinematicScene3D:
- * - Large typography on the left
- * - 3D character occupies the center/right in persistent WebGL space
- * - Interactive telemetry pills with subtle glassmorphic styling
- * - Seamless GSAP scroll transitions into About Me
+ * Exact specifications:
+ * - Left 55%: Name, Description, Buttons, Status
+ * - Right 45%: Dedicated clear space where the LARGE 3D character stands in real WebGL
+ * - Floating cards frame the character with depth without obscuring face/body
+ * - GSAP ScrollTrigger: text moves/fades, camera pushes toward character, smooth transition
  */
 export default function Hero() {
   const { personal } = portfolioData;
   const resumeHref = personal.resumeUrl || '/Abhishek_Gaur_Resume.pdf';
   const [showIntroModal, setShowIntroModal] = useState(false);
+  const heroRef = useRef(null);
+  const leftColRef = useRef(null);
+  const card1Ref = useRef(null);
+  const card2Ref = useRef(null);
+  const card3Ref = useRef(null);
+  const card4Ref = useRef(null);
+
+  // GSAP ScrollTrigger Parallax & Fade
+  useEffect(() => {
+    if (!heroRef.current || !leftColRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // 1. Text fades & gently drifts upward on scroll
+      gsap.to(leftColRef.current, {
+        y: -90,
+        opacity: 0,
+        ease: 'power1.out',
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: 'top top',
+          end: 'bottom 40%',
+          scrub: 1.2
+        }
+      });
+
+      // 2. Floating cards drift at independent parallax depths
+      if (card1Ref.current) {
+        gsap.to(card1Ref.current, {
+          y: -140,
+          opacity: 0.1,
+          scrollTrigger: { trigger: heroRef.current, start: 'top top', end: 'bottom 50%', scrub: 1 }
+        });
+      }
+      if (card2Ref.current) {
+        gsap.to(card2Ref.current, {
+          y: -180,
+          opacity: 0.1,
+          scrollTrigger: { trigger: heroRef.current, start: 'top top', end: 'bottom 50%', scrub: 1.4 }
+        });
+      }
+      if (card3Ref.current) {
+        gsap.to(card3Ref.current, {
+          y: -100,
+          opacity: 0.1,
+          scrollTrigger: { trigger: heroRef.current, start: 'top top', end: 'bottom 50%', scrub: 0.8 }
+        });
+      }
+      if (card4Ref.current) {
+        gsap.to(card4Ref.current, {
+          y: -120,
+          opacity: 0.1,
+          scrollTrigger: { trigger: heroRef.current, start: 'top top', end: 'bottom 50%', scrub: 1.1 }
+        });
+      }
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section
       id="home"
-      className="relative min-h-screen w-full flex flex-col justify-between select-none pt-28 pb-10 z-10 pointer-events-none"
+      ref={heroRef}
+      className="relative min-h-screen lg:min-h-[105vh] w-full flex flex-col justify-between select-none pt-28 pb-10 z-10 pointer-events-none"
     >
-      {/* Volumetric Center Spotlight Glow (Soft atmospheric ambient) */}
-      <div className="absolute top-[38%] left-[62%] -translate-x-1/2 -translate-y-1/2 w-[750px] h-[750px] bg-radial from-cyan-500/10 via-blue-600/5 to-transparent blur-[120px] rounded-full pointer-events-none" />
+      {/* Subtle Volumetric Center-Right Spotlight Glow */}
+      <div className="absolute top-[42%] right-[10%] w-[650px] h-[750px] bg-radial from-cyan-500/10 via-blue-600/5 to-transparent blur-[130px] rounded-full pointer-events-none" />
 
-      {/* Main Container */}
+      {/* Main Split Grid */}
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex items-center">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-4 items-center w-full">
           
           {/* ==================================================== */}
-          {/* LEFT COLUMN: Large Portfolio Typography (6 COLS)     */}
+          {/* LEFT 55%: EDITORIAL PORTFOLIO TYPOGRAPHY (7 COLS)     */}
           {/* ==================================================== */}
-          <div className="lg:col-span-6 flex flex-col items-start text-left pointer-events-auto space-y-5 pt-4 lg:pt-0">
+          <div
+            ref={leftColRef}
+            className="lg:col-span-7 flex flex-col items-start text-left pointer-events-auto space-y-5 pt-2 lg:pt-0 z-20"
+          >
             
             {/* Eyebrow with Cyan Accent Bar */}
             <div className="flex items-center gap-3">
@@ -75,7 +141,7 @@ export default function Hero() {
 
             {/* Massive Chiseled 3D Chrome Typography */}
             <div>
-              <h1 className="text-5xl sm:text-7xl lg:text-[84px] font-black tracking-[-0.04em] leading-[0.92] text-white">
+              <h1 className="text-5xl sm:text-7xl lg:text-[88px] font-black tracking-[-0.04em] leading-[0.92] text-white">
                 <span className="block bg-gradient-to-b from-white via-slate-100 to-slate-400 bg-clip-text text-transparent drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
                   ABHISHEK
                 </span>
@@ -89,19 +155,19 @@ export default function Hero() {
 
             {/* Subline Tracker: CREATIVE ENGINEER */}
             <div className="pt-0.5">
-              <span className="text-xs font-mono font-bold tracking-[0.38em] text-neutral-400 uppercase block">
+              <span className="text-xs sm:text-sm font-mono font-bold tracking-[0.38em] text-neutral-400 uppercase block">
                 CREATIVE ENGINEER · B.TECH ECE
               </span>
             </div>
 
-            {/* Lede / Editorial Introduction */}
+            {/* Editorial Lede Description */}
             <p className="text-sm sm:text-base text-slate-300 font-sans leading-relaxed pt-1 max-w-lg">
               Hardware &amp; IoT innovator building intelligent systems where engineering meets imagination.
               Undergraduate at <strong className="text-white font-semibold">Rashtriya Raksha University (RRU)</strong>,
-              specializing in mission-critical silicon and edge defence telemetry.
+              specializing in mission-critical silicon, low-latency firmware, and edge defence telemetry.
             </p>
 
-            {/* Direct Action Buttons */}
+            {/* Action Buttons: VIEW MY WORK ↗ + WATCH INTRO + RESUME */}
             <div className="flex flex-wrap items-center gap-3.5 pt-4">
               
               {/* Primary Action: VIEW MY WORK ↗ */}
@@ -140,18 +206,19 @@ export default function Hero() {
           </div>
 
           {/* ==================================================== */}
-          {/* RIGHT COLUMN: 3D CHARACTER CLEAR SPACE (6 COLS)      */}
+          {/* RIGHT 45%: LARGE 3D CHARACTER CLEAR SPACE (5 COLS)   */}
           {/* Character is physically rendered by CinematicScene3D */}
           {/* ==================================================== */}
-          <div className="lg:col-span-6 relative min-h-[460px] sm:min-h-[540px] flex items-center justify-center pointer-events-none">
+          <div className="lg:col-span-5 relative min-h-[500px] sm:min-h-[580px] lg:min-h-[660px] flex items-center justify-center pointer-events-none">
             
-            {/* Interactive Telemetry Pills Orbiting the Character */}
-            <div className="relative w-full h-full min-h-[460px]">
+            {/* Floating Cards Layered AROUND the 3D Character (No obstruction of face/body) */}
+            <div className="relative w-full h-full min-h-[500px]">
               
-              {/* Card 1: Embedded Systems (Top-Left) */}
+              {/* Card 1: Embedded Systems (Top-Left of right zone, beside shoulder) */}
               <a
+                ref={card1Ref}
                 href="#skills"
-                className="absolute top-[8%] left-0 sm:left-4 z-20 pointer-events-auto hidden md:flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-[#09101d]/80 backdrop-blur-xl border border-cyan-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:border-cyan-300 hover:scale-105 transition-all group"
+                className="absolute top-[8%] -left-6 sm:-left-10 lg:-left-12 z-10 pointer-events-auto hidden md:flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-[#09101d]/85 backdrop-blur-xl border border-cyan-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.7)] hover:border-cyan-300 hover:scale-105 transition-all group"
               >
                 <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center shrink-0">
                   <Cpu className="w-3.5 h-3.5 text-cyan-300" />
@@ -166,28 +233,11 @@ export default function Hero() {
                 </div>
               </a>
 
-              {/* Card 2: IoT & Smart Systems (Bottom-Left) */}
+              {/* Card 2: Defence Technology (Top-Right, behind upper right) */}
               <a
-                href="#doors"
-                className="absolute bottom-[16%] left-0 sm:left-4 z-20 pointer-events-auto hidden md:flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-[#09101d]/80 backdrop-blur-xl border border-cyan-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:border-cyan-300 hover:scale-105 transition-all group"
-              >
-                <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center shrink-0">
-                  <RoboticArmIcon className="w-4 h-4 text-cyan-300" />
-                </div>
-                <div className="text-left">
-                  <div className="text-xs font-bold text-white group-hover:text-cyan-300 leading-tight">
-                    IoT &amp; Smart Systems
-                  </div>
-                  <div className="text-[9px] font-mono text-neutral-400">
-                    Connect. Automate. Evolve.
-                  </div>
-                </div>
-              </a>
-
-              {/* Card 3: Defence Technology (Top-Right) */}
-              <a
+                ref={card2Ref}
                 href="#about"
-                className="absolute top-[10%] right-0 sm:right-6 z-20 pointer-events-auto hidden md:flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-[#09101d]/80 backdrop-blur-xl border border-cyan-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:border-cyan-300 hover:scale-105 transition-all group"
+                className="absolute top-[12%] right-0 sm:-right-4 z-10 pointer-events-auto hidden md:flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-[#09101d]/85 backdrop-blur-xl border border-cyan-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.7)] hover:border-cyan-300 hover:scale-105 transition-all group"
               >
                 <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center shrink-0">
                   <Shield className="w-3.5 h-3.5 text-cyan-300" />
@@ -202,10 +252,30 @@ export default function Hero() {
                 </div>
               </a>
 
-              {/* Card 4: SIH 2026 Winner (Bottom-Right) */}
+              {/* Card 3: IoT & Smart Systems (Bottom-Left, near waist height) */}
               <a
+                ref={card3Ref}
+                href="#doors"
+                className="absolute bottom-[24%] -left-8 sm:-left-12 lg:-left-16 z-20 pointer-events-auto hidden md:flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-[#09101d]/85 backdrop-blur-xl border border-cyan-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.7)] hover:border-cyan-300 hover:scale-105 transition-all group"
+              >
+                <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center shrink-0">
+                  <RoboticArmIcon className="w-4 h-4 text-cyan-300" />
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-bold text-white group-hover:text-cyan-300 leading-tight">
+                    IoT &amp; Smart Systems
+                  </div>
+                  <div className="text-[9px] font-mono text-neutral-400">
+                    Connect. Automate. Evolve.
+                  </div>
+                </div>
+              </a>
+
+              {/* Card 4: SIH 2026 Winner (Bottom-Right, near platform base) */}
+              <a
+                ref={card4Ref}
                 href="#achievements"
-                className="absolute bottom-[18%] right-0 sm:right-6 z-20 pointer-events-auto hidden md:flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-[#09101d]/80 backdrop-blur-xl border border-amber-400/50 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:border-amber-300 hover:scale-105 transition-all group"
+                className="absolute bottom-[16%] right-0 sm:-right-4 z-20 pointer-events-auto hidden md:flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-[#09101d]/85 backdrop-blur-xl border border-amber-400/50 shadow-[0_10px_30px_rgba(0,0,0,0.7)] hover:border-amber-300 hover:scale-105 transition-all group"
               >
                 <div className="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-400/50 flex items-center justify-center shrink-0">
                   <Trophy className="w-4 h-4 text-amber-400" />
@@ -245,7 +315,7 @@ export default function Hero() {
         {/* Live Status Indicator */}
         <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-slate-400">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
-          <span>3D WebGL Avatar Active · Perspective Camera Linked</span>
+          <span>Cinematic 3D Character Mode · abhishek-gaur.glb Active</span>
         </div>
       </div>
 
@@ -334,7 +404,7 @@ export default function Hero() {
               <a
                 href={resumeHref}
                 download="Abhishek_Gaur_Resume.pdf"
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold text-xs border border-white/15 transition-all"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/5 hover:bg-white/20 text-white font-semibold text-xs border border-white/15 transition-all"
               >
                 <Download className="w-3.5 h-3.5 text-slate-400" />
                 <span>Download Resume</span>
