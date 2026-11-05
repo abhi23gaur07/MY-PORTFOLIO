@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon, Download } from 'lucide-react';
 
 /**
  * Navbar - 3D Cinematic Navigation Bar matching the reference design.
@@ -7,9 +7,10 @@ import { Menu, X, Sun, Moon } from 'lucide-react';
  * Features:
  * - Geometric "AG." brand logo on the left
  * - Centered uppercase navigation links: HOME, ABOUT, PROJECTS, SKILLS, CONTACT
+ * - Dedicated RESUME download button right beside CONTACT
  * - Active section glowing underline indicator
  * - Right-aligned Sun / Moon theme toggle capsule [ ☼ ☾ ]
- * - Mobile responsive drawer
+ * - Mobile responsive drawer with 1-click resume download
  */
 export default function Navbar({ mode = 'dark', onToggleMode }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -83,8 +84,8 @@ export default function Navbar({ mode = 'dark', onToggleMode }) {
           </span>
         </a>
 
-        {/* Center Floating Navigation Links: HOME ABOUT PROJECTS SKILLS CONTACT */}
-        <nav className="hidden md:flex items-center gap-8 lg:gap-10 font-mono text-xs font-bold tracking-[0.22em] text-neutral-400">
+        {/* Center Floating Navigation Links: HOME ABOUT PROJECTS SKILLS CONTACT + RESUME */}
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8 font-mono text-xs font-bold tracking-[0.2em] text-neutral-400">
           {navLinks.map((link) => {
             const isActive = activeSection === link.id;
             return (
@@ -102,6 +103,17 @@ export default function Navbar({ mode = 'dark', onToggleMode }) {
               </a>
             );
           })}
+
+          {/* Option of Resume at the top right beside CONTACT */}
+          <a
+            href="/Abhishek_Gaur_Resume.pdf"
+            download="Abhishek_Gaur_Resume.pdf"
+            className="group relative inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-cyan-500/15 via-blue-500/15 to-indigo-500/15 hover:from-cyan-500/30 hover:to-blue-500/30 border border-cyan-400/40 hover:border-cyan-300 text-cyan-300 hover:text-white font-mono text-xs font-bold tracking-wider transition-all duration-300 shadow-[0_0_12px_rgba(56,189,248,0.2)] hover:shadow-[0_0_20px_rgba(56,189,248,0.45)] hover:scale-105 active:scale-95 cursor-pointer ml-1"
+            title="Download Abhishek Gaur's Resume (PDF)"
+          >
+            <Download className="w-3.5 h-3.5 text-cyan-300 group-hover:text-white group-hover:animate-bounce transition-colors" />
+            <span>RESUME</span>
+          </a>
         </nav>
 
         {/* Right Action: Sun / Moon Theme Toggle Capsule [ ☼ ☾ ] */}
@@ -143,6 +155,18 @@ export default function Navbar({ mode = 'dark', onToggleMode }) {
               {link.name}
             </a>
           ))}
+          {/* Mobile Resume Download Option */}
+          <div className="pt-2">
+            <a
+              href="/Abhishek_Gaur_Resume.pdf"
+              download="Abhishek_Gaur_Resume.pdf"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 font-mono text-xs font-bold tracking-wider"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>DOWNLOAD RESUME</span>
+            </a>
+          </div>
         </div>
       )}
     </header>
