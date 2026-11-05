@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import { 
   Play, 
   ArrowRight, 
@@ -16,6 +16,8 @@ import {
 import { portfolioData } from '../data/portfolioData';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+const HeroAvatar = lazy(() => import('./HeroAvatar'));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -51,6 +53,7 @@ export default function Hero() {
   const { personal } = portfolioData;
   const resumeHref = personal.resumeUrl || '/Abhishek_Gaur_Resume.pdf';
   const [showIntroModal, setShowIntroModal] = useState(false);
+  const [avatarLoaded, setAvatarLoaded] = useState(false);
   const heroRef = useRef(null);
   const leftColRef = useRef(null);
   const card1Ref = useRef(null);
@@ -207,12 +210,17 @@ export default function Hero() {
 
           {/* ==================================================== */}
           {/* RIGHT 45%: LARGE 3D CHARACTER CLEAR SPACE (5 COLS)   */}
-          {/* Character is physically rendered by CinematicScene3D */}
+          {/* Dedicated WebGL HeroAvatar (abhishek.glb)            */}
           {/* ==================================================== */}
-          <div className="lg:col-span-5 relative min-h-[500px] sm:min-h-[580px] lg:min-h-[660px] flex items-center justify-center pointer-events-none">
+          <div className="lg:col-span-5 relative min-h-[520px] sm:min-h-[600px] lg:min-h-[680px] flex items-center justify-center pointer-events-none">
             
+            {/* 3D WebGL Canvas Layer (below cards) */}
+            <Suspense fallback={null}>
+              <HeroAvatar onLoaded={() => setAvatarLoaded(true)} />
+            </Suspense>
+
             {/* Floating Cards Layered AROUND the 3D Character (No obstruction of face/body) */}
-            <div className="relative w-full h-full min-h-[500px]">
+            <div className="relative w-full h-full min-h-[520px] pointer-events-none z-10">
               
               {/* Card 1: Embedded Systems (Top-Left of right zone, beside shoulder) */}
               <a
@@ -314,8 +322,8 @@ export default function Hero() {
 
         {/* Live Status Indicator */}
         <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-slate-400">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
-          <span>Cinematic 3D Character Mode · abhishek-gaur.glb Active</span>
+          <span className={`w-2 h-2 rounded-full ${avatarLoaded ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]' : 'bg-cyan-400'} animate-pulse`} />
+          <span>{avatarLoaded ? '3D WebGL Avatar Active' : 'Loading 3D Avatar...'}</span>
         </div>
       </div>
 
