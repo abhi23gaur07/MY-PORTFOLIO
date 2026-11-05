@@ -234,6 +234,11 @@ export default function Hero({ mode = 'dark' }) {
                 : 'bg-gradient-to-t from-[#eef3f8] via-[#eef3f8]/75 to-transparent'
             }`} />
 
+            {/* Left Soft Contrast Illumination in Light Mode for 100% Text Readability */}
+            {!isDark && (
+              <div className="absolute top-0 bottom-0 left-0 w-full lg:w-[60%] bg-gradient-to-r from-[#eef3f8]/95 via-[#eef3f8]/80 to-transparent pointer-events-none z-0" />
+            )}
+
             {/* Subtle Ambient Glow */}
             <div className={`absolute bottom-[28%] left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-[120px] pointer-events-none ${
               isDark ? 'bg-amber-500/10' : 'bg-blue-400/15'
@@ -263,7 +268,9 @@ export default function Hero({ mode = 'dark' }) {
           {/* ==================================================== */}
           <div
             ref={leftColRef}
-            className="lg:col-span-6 flex flex-col items-start text-left pointer-events-auto transform transition-transform duration-500 ease-out"
+            className={`lg:col-span-6 flex flex-col items-start text-left pointer-events-auto transform transition-transform duration-500 ease-out ${
+              !isDark ? 'p-6 sm:p-8 rounded-3xl bg-white/85 backdrop-blur-xl border border-white/80 shadow-2xl shadow-blue-900/10' : ''
+            }`}
             style={{
               transform: `translate3d(${mouseParallax.x * -6}px, ${mouseParallax.y * -5}px, 0)`
             }}
@@ -272,7 +279,7 @@ export default function Hero({ mode = 'dark' }) {
             <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] sm:text-xs font-mono font-bold tracking-[0.22em] uppercase mb-3 backdrop-blur-md shadow-xs ${
               isDark
                 ? 'bg-cyan-500/10 border border-cyan-400/30 text-cyan-300'
-                : 'bg-blue-50/90 border border-blue-300 text-blue-700'
+                : 'bg-blue-100/90 border border-blue-400/50 text-blue-800'
             }`}>
               <Sparkles className={`w-3.5 h-3.5 ${isDark ? 'text-cyan-400' : 'text-blue-600'}`} />
               <span>FULL-STACK &amp; HARDWARE INNOVATOR</span>
@@ -280,41 +287,41 @@ export default function Hero({ mode = 'dark' }) {
 
             {/* Massive Bold Slanted Chiseled Metallic Headline */}
             <h1 className="text-5xl sm:text-7xl lg:text-[80px] xl:text-[92px] font-black italic tracking-[-0.035em] leading-[0.88]">
-              <span className={`block bg-clip-text text-transparent ${
+              <span className={`block ${
                 isDark
-                  ? 'bg-gradient-to-b from-[#ffffff] via-[#e2e8f0] to-[#94a3b8] drop-shadow-[0_8px_30px_rgba(0,0,0,0.95)]'
-                  : 'bg-gradient-to-b from-slate-950 via-slate-800 to-slate-700 drop-shadow-[0_4px_16px_rgba(0,0,0,0.12)]'
+                  ? 'bg-gradient-to-b from-[#ffffff] via-[#e2e8f0] to-[#94a3b8] bg-clip-text text-transparent drop-shadow-[0_8px_30px_rgba(0,0,0,0.95)]'
+                  : 'text-slate-950 drop-shadow-[0_2px_12px_rgba(255,255,255,0.9)]'
               }`}>
                 ABHISHEK
               </span>
-              <span className={`block bg-clip-text text-transparent ${
+              <span className={`block ${
                 isDark
-                  ? 'bg-gradient-to-b from-[#ffffff] via-[#e2e8f0] to-[#94a3b8] drop-shadow-[0_8px_30px_rgba(0,0,0,0.95)]'
-                  : 'bg-gradient-to-b from-slate-950 via-slate-800 to-slate-700 drop-shadow-[0_4px_16px_rgba(0,0,0,0.12)]'
+                  ? 'bg-gradient-to-b from-[#ffffff] via-[#e2e8f0] to-[#94a3b8] bg-clip-text text-transparent drop-shadow-[0_8px_30px_rgba(0,0,0,0.95)]'
+                  : 'text-blue-700 drop-shadow-[0_2px_12px_rgba(255,255,255,0.9)]'
               }`}>
                 GAUR
               </span>
             </h1>
 
             {/* Subtitle: HARDWARE PROFICIENCY · FRONTEND & IoT WEBSITES */}
-            <div className="mt-4 sm:mt-5 space-y-1">
+            <div className="mt-4 sm:mt-5 space-y-1.5">
               <p className={`text-xs sm:text-sm font-mono font-bold tracking-[0.24em] uppercase ${
-                isDark ? 'text-neutral-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]' : 'text-slate-800'
+                isDark ? 'text-neutral-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]' : 'text-slate-950 font-black'
               }`}>
                 HARDWARE &amp; SILICON PROFICIENCY
               </p>
               <p className={`text-xs sm:text-sm font-mono font-bold tracking-[0.24em] uppercase ${
-                isDark ? 'text-cyan-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]' : 'text-blue-600 font-extrabold'
+                isDark ? 'text-cyan-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]' : 'text-blue-700 font-black'
               }`}>
                 FRONTEND &amp; IoT-BASED WEBSITES
               </p>
             </div>
 
             {/* Subtle Horizontal Divider Line */}
-            <div className={`w-28 sm:w-36 h-[1.5px] my-5 sm:my-6 ${
+            <div className={`w-36 sm:w-48 h-[3px] rounded-full my-5 sm:my-6 ${
               isDark
-                ? 'bg-gradient-to-r from-amber-400/80 via-neutral-500/40 to-transparent'
-                : 'bg-gradient-to-r from-blue-600/80 via-slate-300 to-transparent'
+                ? 'bg-gradient-to-r from-amber-400 via-cyan-400 to-transparent shadow-[0_0_10px_#38bdf8]'
+                : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 shadow-[0_0_12px_rgba(37,99,235,0.6)]'
             }`} />
 
             {/* Call to Action Buttons: EXPLORE MY WORK → + RESUME ⤓ */}
@@ -324,17 +331,17 @@ export default function Hero({ mode = 'dark' }) {
                 className={`group relative inline-flex items-center gap-2.5 px-6 py-3 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] cursor-pointer shadow-md ${
                   isDark
                     ? 'bg-[#0a0f18]/85 border border-amber-400/50 hover:border-cyan-400/90 shadow-[0_0_20px_rgba(245,158,11,0.2)] text-white'
-                    : 'bg-white/95 border border-blue-400/50 hover:border-blue-600 text-slate-900 shadow-slate-300/50'
+                    : 'bg-blue-600 hover:bg-blue-700 text-white font-extrabold shadow-blue-500/30'
                 }`}
               >
                 <span className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                  isDark ? 'bg-amber-400 shadow-[0_0_8px_#f59e0b] group-hover:bg-cyan-300' : 'bg-blue-600 group-hover:bg-cyan-500'
+                  isDark ? 'bg-amber-400 shadow-[0_0_8px_#f59e0b] group-hover:bg-cyan-300' : 'bg-white'
                 }`} />
                 <span className="font-mono text-xs sm:text-sm font-bold tracking-[0.2em] uppercase">
                   EXPLORE MY WORK
                 </span>
                 <ArrowRight className={`w-4 h-4 transition-all group-hover:translate-x-1.5 ${
-                  isDark ? 'text-neutral-300 group-hover:text-cyan-300' : 'text-slate-600 group-hover:text-blue-600'
+                  isDark ? 'text-neutral-300 group-hover:text-cyan-300' : 'text-white'
                 }`} />
               </a>
 
