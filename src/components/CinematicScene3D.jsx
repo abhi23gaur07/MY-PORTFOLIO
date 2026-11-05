@@ -1,101 +1,145 @@
 import React, { Suspense, useRef, useEffect, useMemo, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
 /**
- * Avatar Component - Renders abhishek-gaur.glb on the RIGHT 45% of the viewport.
+ * Avatar - Programmatically Normalized 3D Character Model.
  * 
- * Specifications:
- * - Positioned on the RIGHT (x ≈ 1.35 on desktop)
- * - Large scale (75%–90% viewport height, extending near bottom of hero)
- * - Head around upper-middle, below navbar, not cropped
- * - Grounded on subtle floor with soft contact shadow
- * - Subtle 3/4 angle facing camera/user
- * - Natural idle breathing & gentle sway (no continuous spinning)
- * - Mouse look-at response with smooth damping
- * - Scroll-driven push-in and gentle rotation
+ * Implements exact bounding-box inspection and normalization:
+ * 1. Inspects raw model using THREE.Box3().setFromObject()
+ * 2. Normalizes modelHeight to exactly 2.1 units (75-80% viewport height)
+ * 3. Centers model along X & Z and grounds feet at ground level (y = -1.15)
+ * 4. Positions character on the RIGHT 40-45% of the viewport (x ≈ +1.4 to +1.8)
+ * 5. Subtle idle breathing, natural weight sway, and mouse look-at tracking
  */
-function Avatar({ mouse, scrollProgress, isMobile }) {
-  const groupRef = useRef();
+function Avatar({ mouse, scrollProgress }) {
+  const outerGroupRef = useRef();
+  const innerGroupRef = useRef();
   const { scene } = useGLTF('/models/abhishek-gaur.glb');
+  const { viewport } = useThree();
 
-  // Clone scene to prevent re-render collisions and tune materials
-  const clonedScene = useMemo(() => {
+  // Programmatically normalize the model using its exact bounding box
+  const { normalizedScene, feetY, headY } = useMemo(() => {
     const clone = scene.clone();
+
+    // 1. Calculate actual raw bounding box
+    const rawBox = new THREE.Box3().setFromObject(clone);
+    const rawSize = new THREE.Vector3();
+    rawBox.getSize(rawSize);
+    const rawCenter = new THREE.Vector3();
+    rawBox.getCenter(rawCenter);
+
+    // 2. Normalize to human height (2.1 units)
+    const targetHeight = 2.1;
+    const actualHeight = rawSize.y > 0 ? rawSize.y : 1;
+    const normScale = targetHeight / actualHeight;
+    clone.scale.set(normScale, normScale, normScale);
+
+    // Center horizontally (X) and depth-wise (Z) relative to character anchor
+    clone.position.x = -rawCenter.x * normScale;
+    clone.position.z = -rawCenter.z * normScale;
+
+    // 3. Ground the feet at target ground level (y = -1.15)
+    clone.updateMatrixWorld(true);
+    const scaledBox = new THREE.Box3().setFromObject(clone);
+    const targetGroundY = -1.15;
+    const offsetY = targetGroundY - scaledBox.min.y;
+    clone.position.y += offsetY;
+
+    clone.updateMatrixWorld(true);
+    const finalBox = new THREE.Box3().setFromObject(clone);
+
+    // Enhance PBR materials for cinematic dark studio lighting
     clone.traverse((node) => {
       if (node.isMesh) {
         node.castShadow = true;
         node.receiveShadow = true;
         if (node.material) {
-          // Enhance PBR lighting response against dark studio backdrop
           node.material.roughness = Math.max(0.35, node.material.roughness ?? 0.5);
           node.material.metalness = Math.min(0.85, node.material.metalness ?? 0.3);
           node.material.needsUpdate = true;
         }
       }
     });
-    return clone;
+
+    return {
+      normalizedScene: clone,
+      feetY: finalBox.min.y,
+      headY: finalBox.max.y
+    };
   }, [scene]);
 
+  // Compute responsive right-side X placement based on camera frustum width
+  // Desktop: places character at ~28% of total viewport width to the right (x ≈ 1.4 to 1.7)
+  // Mobile/Tablet: shifts slightly closer to center so character remains fully framed
+  const targetX = useMemo(() => {
+    if (viewport.width > 4.2) {
+      return viewport.width * 0.28; // desktop: right 40-45% zone
+    } else if (viewport.width > 3.0) {
+      return viewport.width * 0.22; // tablet
+    } else {
+      return viewport.width * 0.12; // mobile
+    }
+  }, [viewport.width]);
+
   useFrame((state) => {
-    if (!groupRef.current) return;
+    if (!innerGroupRef.current || !outerGroupRef.current) return;
     const t = state.clock.getElapsedTime();
     const p = scrollProgress.current;
 
-    // 1. Scale: Large, 75–90% viewport height
-    // Desktop scale ~0.62; mobile scale ~0.48
-    const baseScale = isMobile ? 0.48 : 0.62;
-    // Tiny natural breathing movement (subtle chest/body expansion)
+    // 1. Natural idle breathing (subtle chest/body expansion)
     const breath = Math.sin(t * 1.5) * 0.0035;
-    groupRef.current.scale.set(baseScale + breath, baseScale + breath, baseScale + breath);
+    innerGroupRef.current.scale.set(1 + breath, 1 + breath, 1);
 
-    // 2. Position: Right 40-45% of screen on desktop, center-right on mobile
-    // Feet grounded at y = -1.5, head around y = +1.12
-    const basePosX = isMobile ? 0.25 : 1.38;
-    const basePosY = 0.72; // positions feet at y = -1.5
+    // 2. Subtle weight shift (tiny idle vertical sway)
+    const idleSwayY = Math.sin(t * 1.1) * 0.006;
 
-    // Subtle idle body float/sway (tiny, human weight shifting)
-    const subtleSwayY = Math.sin(t * 1.1) * 0.008;
+    // 3. Scroll position transition: character shifts slightly toward center and forward
+    const scrollShiftX = Math.sin(Math.min(1, p * 2.0) * Math.PI * 0.5) * -(targetX * 0.45);
+    const scrollShiftY = -p * 0.35;
 
-    // Scroll interpolation: as user scrolls down, character smoothly shifts slightly toward center
-    // and camera moves toward character
-    const scrollShiftX = Math.sin(Math.min(1, p * 2.2) * Math.PI * 0.5) * -0.55;
-    const scrollShiftY = -p * 0.4;
+    outerGroupRef.current.position.x = targetX + scrollShiftX;
+    outerGroupRef.current.position.y = idleSwayY + scrollShiftY;
 
-    groupRef.current.position.x = basePosX + scrollShiftX;
-    groupRef.current.position.y = basePosY + subtleSwayY + scrollShiftY;
-
-    // 3. Rotation: Cinematic 3/4 angle, mostly facing camera
-    // Default 3/4 angle: -0.15 rad (facing slightly left toward the typography)
-    const baseRotY = -0.18;
-    // Idle subtle sway
-    const idleRotY = Math.sin(t * 0.45) * 0.035;
-    // Mouse look-at response (subtle, clamped between -0.3 and +0.3)
-    const mouseRotY = mouse.current.x * 0.15;
-    // Scroll rotation: subtly turns as user scrolls down
-    const scrollRotY = p * 0.45;
+    // 4. Rotation: Cinematic 3/4 angle facing camera/left towards typography
+    const baseRotY = -0.16; // 3/4 pose facing slightly toward content
+    const idleRotY = Math.sin(t * 0.45) * 0.025;
+    const mouseRotY = mouse.current.x * 0.14; // smooth look-at tracking
+    const scrollRotY = p * 0.42;
 
     const targetRotY = baseRotY + idleRotY + mouseRotY + scrollRotY;
-    // Subtle pitch response from vertical mouse
-    const targetRotX = mouse.current.y * 0.05;
+    const targetRotX = mouse.current.y * 0.04;
 
     // Smooth damping / lerp
-    groupRef.current.rotation.y += (targetRotY - groupRef.current.rotation.y) * 0.06;
-    groupRef.current.rotation.x += (targetRotX - groupRef.current.rotation.x) * 0.06;
+    innerGroupRef.current.rotation.y += (targetRotY - innerGroupRef.current.rotation.y) * 0.06;
+    innerGroupRef.current.rotation.x += (targetRotX - innerGroupRef.current.rotation.x) * 0.06;
   });
 
   return (
-    <group ref={groupRef} position={[isMobile ? 0.25 : 1.38, 0.72, 0]}>
-      <primitive object={clonedScene} />
+    <group ref={outerGroupRef} position={[targetX, 0, 0]}>
+      <group ref={innerGroupRef}>
+        <primitive object={normalizedScene} />
+      </group>
 
-      {/* Soft Contact Shadow directly beneath feet */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.62, 0]}>
-        <planeGeometry args={[1.8, 1.2]} />
+      {/* Realistic Soft Contact Shadow directly under feet */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.148, 0]}>
+        <circleGeometry args={[0.65, 48]} />
         <meshBasicMaterial
           color="#000000"
           transparent
-          opacity={0.85}
+          opacity={0.7}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Diffuse Outer Ambient Shadow Ring */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.149, 0]}>
+        <circleGeometry args={[1.2, 48]} />
+        <meshBasicMaterial
+          color="#000000"
+          transparent
+          opacity={0.25}
           depthWrite={false}
         />
       </mesh>
@@ -103,40 +147,41 @@ function Avatar({ mouse, scrollProgress, isMobile }) {
   );
 }
 
-// Preload the GLB so it displays without hesitation
+// Preload model
 useGLTF.preload('/models/abhishek-gaur.glb');
 
 /**
- * Camera Controller with Mouse Parallax & Scroll Pushing
+ * Camera Controller - Perspective Camera with Mouse Parallax & Scroll Zoom
  */
-function CameraController({ mouse, scrollProgress, isMobile }) {
-  const currentLookAt = useRef(new THREE.Vector3(0, 0, 0));
+function CameraController({ mouse, scrollProgress }) {
+  const currentLookAt = useRef(new THREE.Vector3(0, -0.08, 0));
 
   useFrame((state) => {
     const p = scrollProgress.current;
 
-    // Base camera coordinates
-    // Desktop: Z = 4.8, Y = 0.05, X = 0 (looking at center, character on right at X = 1.38)
-    let baseCamZ = 4.8 - p * 0.9; // pushes slowly toward character on scroll
-    let baseCamX = isMobile ? 0 : 0.05;
-    let baseCamY = 0.02 + p * 0.15;
+    // Base camera coordinates:
+    // Z = 3.9 provides exact 78% viewport height framing of the 2.1-unit character
+    // On scroll: pushes slowly toward character (3.9 -> 3.2)
+    const baseCamZ = 3.9 - p * 0.7;
+    const baseCamX = 0;
+    const baseCamY = -0.05 + p * 0.12;
 
-    // Subtle mouse parallax (camera moves very slightly opposite/with mouse)
-    const parallaxX = mouse.current.x * 0.18;
-    const parallaxY = -mouse.current.y * 0.12;
+    // Subtle mouse parallax
+    const parallaxX = mouse.current.x * 0.14;
+    const parallaxY = -mouse.current.y * 0.1;
 
     const targetCamX = baseCamX + parallaxX;
     const targetCamY = baseCamY + parallaxY;
     const targetCamZ = baseCamZ;
 
-    // Smooth lerp damping
+    // Smooth camera damping
     state.camera.position.x += (targetCamX - state.camera.position.x) * 0.045;
     state.camera.position.y += (targetCamY - state.camera.position.y) * 0.045;
     state.camera.position.z += (targetCamZ - state.camera.position.z) * 0.045;
 
     // Target look-at: shifts smoothly as user scrolls
-    const targetLookAtX = (isMobile ? 0.1 : 0.45) - p * 0.2;
-    const targetLookAtY = 0.0 + p * 0.1;
+    const targetLookAtX = 0.35 - p * 0.25;
+    const targetLookAtY = -0.08 + p * 0.1;
     const targetLookAt = new THREE.Vector3(targetLookAtX, targetLookAtY, 0);
 
     currentLookAt.current.lerp(targetLookAt, 0.05);
@@ -147,23 +192,21 @@ function CameraController({ mouse, scrollProgress, isMobile }) {
 }
 
 /**
- * Cinematic Studio Environment: Lighting, Grounding, and Atmospheric Depth
+ * Studio Lighting & Grounding Plane
  */
-function StudioEnvironment({ isMobile }) {
-  const charX = isMobile ? 0.25 : 1.38;
-
+function StudioLighting() {
   return (
     <>
-      {/* Subtle Studio Atmospheric Fog around lower body */}
-      <fog attach="fog" args={['#05070c', 3.8, 14]} />
+      {/* Volumetric Studio Fog hugging lower ground */}
+      <fog attach="fog" args={['#05070c', 3.6, 12]} />
 
-      {/* Dark Blue/Cyan Ambient Environment Light */}
-      <ambientLight intensity={0.55} color="#0c1322" />
+      {/* Dark Blue/Cyan Ambient Fill */}
+      <ambientLight intensity={0.65} color="#0c1424" />
 
-      {/* Key Light from upper/front-left (sculpts face, chest, and arms) */}
+      {/* Key Light from upper/front-left (sculpts facial features, shirt & trousers) */}
       <directionalLight
-        position={[-1.5, 4.0, 3.8]}
-        intensity={2.6}
+        position={[-2.0, 3.8, 3.5]}
+        intensity={2.8}
         color="#ffffff"
         castShadow
         shadow-mapSize={[1024, 1024]}
@@ -171,53 +214,34 @@ function StudioEnvironment({ isMobile }) {
 
       {/* Soft Fill Light (front-right) */}
       <directionalLight
-        position={[3.0, 1.8, 2.8]}
-        intensity={1.1}
+        position={[3.0, 1.5, 2.5]}
+        intensity={1.2}
         color="#93c5fd"
       />
 
       {/* Strong Subtle Rim Light from behind/right (carves hair, shoulder, and silhouette) */}
       <pointLight
-        position={[charX + 1.8, 2.2, -2.2]}
-        intensity={9.5}
+        position={[3.2, 1.8, -2.0]}
+        intensity={10.5}
         color="#8aa8ff"
-        distance={10}
+        distance={12}
       />
 
-      {/* Warm Accent Backlight (subtle Hollywood color contrast) */}
+      {/* Warm Accent Backlight */}
       <pointLight
-        position={[charX - 2.0, 1.2, -1.8]}
+        position={[-2.5, 1.2, -1.8]}
         intensity={4.5}
         color="#ffb56b"
-        distance={8}
+        distance={9}
       />
 
-      {/* Subtle Neon Floor Uplight radiating beneath character */}
-      <pointLight
-        position={[charX, -1.48, 0.3]}
-        intensity={3.8}
-        color="#38bdf8"
-        distance={5}
-      />
-
-      {/* Ground Floor Plane with subtle dark metallic reflection */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.52, 0]} receiveShadow>
-        <planeGeometry args={[18, 18]} />
+      {/* Ground Floor Plane with dark metallic studio reflection */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.155, 0]} receiveShadow>
+        <planeGeometry args={[22, 22]} />
         <meshStandardMaterial
-          color="#06080d"
-          roughness={0.5}
-          metalness={0.65}
-        />
-      </mesh>
-
-      {/* Circular Stage Rim under character on the right */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[charX, -1.515, 0]}>
-        <ringGeometry args={[1.5, 1.54, 64]} />
-        <meshBasicMaterial
-          color="#38bdf8"
-          transparent
-          opacity={0.45}
-          side={THREE.DoubleSide}
+          color="#06080e"
+          roughness={0.48}
+          metalness={0.68}
         />
       </mesh>
     </>
@@ -230,15 +254,8 @@ function StudioEnvironment({ isMobile }) {
 export default function CinematicScene3D() {
   const mouse = useRef({ x: 0, y: 0 });
   const scrollProgress = useRef(0);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
     // Mouse movement parallax tracker
     const handlePointerMove = (e) => {
       mouse.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -256,7 +273,6 @@ export default function CinematicScene3D() {
     window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
-      window.removeEventListener('resize', checkMobile);
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('scroll', handleScroll);
     };
@@ -265,7 +281,7 @@ export default function CinematicScene3D() {
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
       <Canvas
-        camera={{ position: [0, 0.05, 4.8], fov: 35 }}
+        camera={{ position: [0, -0.05, 3.9], fov: 38 }}
         dpr={[1, Math.min(window.devicePixelRatio, 2)]}
         gl={{
           antialias: true,
@@ -276,9 +292,9 @@ export default function CinematicScene3D() {
         }}
       >
         <Suspense fallback={null}>
-          <CameraController mouse={mouse} scrollProgress={scrollProgress} isMobile={isMobile} />
-          <StudioEnvironment isMobile={isMobile} />
-          <Avatar mouse={mouse} scrollProgress={scrollProgress} isMobile={isMobile} />
+          <CameraController mouse={mouse} scrollProgress={scrollProgress} />
+          <StudioLighting />
+          <Avatar mouse={mouse} scrollProgress={scrollProgress} />
         </Suspense>
       </Canvas>
     </div>
