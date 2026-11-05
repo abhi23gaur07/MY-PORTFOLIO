@@ -52,7 +52,7 @@ export default function Preloader() {
         <div className="mb-6 flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 border border-blue-200/90 shadow-sm backdrop-blur-md animate-in fade-in duration-700">
           <Shield className="w-4 h-4 text-blue-600" />
           <span className="text-xs font-mono font-bold text-blue-800 uppercase tracking-widest">
-            ECE · Defence Technology
+            Electronics Engineering · Defence Technology
           </span>
         </div>
 

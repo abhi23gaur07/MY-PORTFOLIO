@@ -109,7 +109,7 @@ export default function AboutMe() {
             <span>01 / ABOUT ME</span>
           </div>
           <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white max-w-3xl leading-[1.08]">
-            Bridging Silicon Hardware &amp;{' '}
+            Bridging Hardware &amp;{' '}
             <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-300 bg-clip-text text-transparent">
               Modern Full-Stack Software
             </span>
@@ -126,7 +126,7 @@ export default function AboutMe() {
             
             <div className="p-6 sm:p-8 rounded-3xl bg-[#080d1a]/85 backdrop-blur-xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.7)] space-y-5">
               <p className="text-base sm:text-lg text-slate-200 leading-relaxed font-normal">
-                I am an Electronics and Communication Engineering undergraduate at{' '}
+                I am an Electronics Engineering undergraduate at{' '}
                 <strong className="text-cyan-300 font-semibold">Rashtriya Raksha University (RRU)</strong>,
                 specializing in <strong className="text-white font-semibold">Defence Technology</strong>.
                 My work uniquely bridges the physical reality of circuits, microcontrollers, and custom PCBs with high-level modern software development and IoT-based websites.

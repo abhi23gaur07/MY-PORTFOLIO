@@ -209,7 +209,7 @@ export const portfolioData = {
     {
       id: "rru-tech-showcase",
       rank: "Institutional Honors",
-      overallRank: "Top ECE Innovator",
+      overallRank: "Top Electronics Innovator",
       title: "RRU Engineering & Technology Innovation Showcase",
       venue: "School of Engineering & Technology, RRU",
       location: "Gandhinagar, Gujarat",
