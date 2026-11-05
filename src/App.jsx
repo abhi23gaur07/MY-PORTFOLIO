@@ -26,9 +26,11 @@ export default function App() {
     if (saved === 'dark') {
       document.documentElement.dataset.mode = 'dark';
       document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
     } else {
-      delete document.documentElement.dataset.mode;
+      document.documentElement.dataset.mode = 'light';
       document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
     }
   }, []);
 
@@ -38,9 +40,11 @@ export default function App() {
       if (next === 'dark') {
         document.documentElement.dataset.mode = 'dark';
         document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
       } else {
-        delete document.documentElement.dataset.mode;
+        document.documentElement.dataset.mode = 'light';
         document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
       }
       localStorage.setItem('abhishek-cinematic-theme', next);
       localStorage.setItem('abhishek-theme-mode', next);
@@ -49,7 +53,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#06080d] text-slate-100 relative selection:bg-cyan-500 selection:text-slate-950 transition-colors duration-500">
+    <div className={`min-h-screen relative selection:bg-cyan-500 selection:text-slate-950 transition-colors duration-500 ${
+      mode === 'dark' ? 'bg-[#06080d] text-slate-100' : 'bg-[#f4f7fb] text-slate-900'
+    }`}>
       
       {/* 2D Canvas Ribbon Trail Custom Cursor */}
       <CustomCursor />
@@ -69,10 +75,10 @@ export default function App() {
       {/* Main Content Sections */}
       <main className="relative z-10">
         {/* Editorial Hero with 3D WebGL Model in Center */}
-        <Hero />
+        <Hero mode={mode} />
 
         {/* Dedicated About Me Section (Followed immediately on scroll) */}
-        <AboutMe />
+        <AboutMe mode={mode} />
 
         {/* The Signature 3D Doors Hallway ("Magic happens behind the doors") */}
         <DoorsSection />
