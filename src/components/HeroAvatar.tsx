@@ -265,3 +265,4 @@ export default function HeroAvatar({ onLoaded, className = '' }: HeroAvatarProps
     </div>
   );
 }
+

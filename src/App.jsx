@@ -63,8 +63,8 @@ export default function App() {
       {/* Preloader Splash Screen */}
       <Preloader />
 
-      {/* Sticky Navigation Header with Live IST Clock */}
-      <Navbar />
+      {/* Sticky Navigation Header matching cinematic reference */}
+      <Navbar mode={mode} onToggleMode={handleToggleMode} />
 
       {/* Main Content Sections */}
       <main className="relative z-10">

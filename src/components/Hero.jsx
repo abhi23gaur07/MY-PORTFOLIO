@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import { 
-  Play, 
   ArrowRight, 
-  X, 
-  Quote, 
-  Trophy, 
   Cpu, 
-  Radio, 
   Shield, 
-  Compass, 
-  Download, 
+  Code2, 
+  Play, 
+  Pause,
+  Box,
+  Film,
   Sparkles,
-  ChevronDown
+  X,
+  Quote,
+  Radio,
+  Trophy,
+  Download,
+  Compass
 } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import gsap from 'gsap';
@@ -21,282 +24,367 @@ const HeroAvatar = lazy(() => import('./HeroAvatar'));
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Custom Precision SVG Icons matching the reference mockup
-function RoboticArmIcon({ className = "w-5 h-5" }) {
-  return (
-    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-      <ellipse cx="26" cy="52" rx="14" ry="5" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="2 1" />
-      <path d="M16 52 C16 48, 36 48, 36 52" stroke="#38bdf8" strokeWidth="1.5" />
-      <rect x="23" y="44" width="6" height="8" rx="2" stroke="#38bdf8" strokeWidth="1.5" fill="rgba(56,189,248,0.15)" />
-      <circle cx="26" cy="42" r="3.5" stroke="#38bdf8" strokeWidth="1.5" fill="#090d16" />
-      <path d="M26 38.5 L24 24" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
-      <circle cx="24" cy="23" r="3" stroke="#38bdf8" strokeWidth="1.5" fill="#38bdf8" fillOpacity="0.4" />
-      <path d="M27 23 L44 32" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
-      <circle cx="45" cy="33" r="2.5" stroke="#38bdf8" strokeWidth="1.5" />
-      <path d="M47 31 L54 27 M47 35 L54 39" stroke="#38bdf8" strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="54" cy="27" r="1.5" fill="#38bdf8" />
-      <circle cx="54" cy="39" r="1.5" fill="#38bdf8" />
-    </svg>
-  );
-}
-
 /**
- * Hero - Cinematic Split Composition (Left 55% Typography | Right 45% Large 3D Avatar).
+ * Hero - 1:1 Recreation of the Cinematic Editorial Portfolio Mockup
  * 
- * Exact specifications:
- * - Left 55%: Name, Description, Buttons, Status
- * - Right 45%: Dedicated clear space where the LARGE 3D character stands in real WebGL
- * - Floating cards frame the character with depth without obscuring face/body
- * - GSAP ScrollTrigger: text moves/fades, camera pushes toward character, smooth transition
+ * Composition:
+ * - Full viewport background video (/hero_video.mp4) of Abhishek walking & posing on the circular pedestal
+ * - Poster fallback (/hero_mockup.jpg) for instantaneous rendering
+ * - Left: "HI, I'M ABHISHEK GAUR", "ELECTRONICS ENGINEER \n DEFENCE TECHNOLOGY", horizontal rule, "EXPLORE MY WORK →"
+ * - Right: "BUILDING INTELLIGENT SYSTEMS FOR A SMARTER TOMORROW", Cyber HUD card with HARDWARE & IoT, DEFENCE TECH, EMBEDDED SYSTEMS
+ * - Center Bottom: Mouse capsule + "SCROLL TO EXPLORE" with vertical guideline
+ * - Interactive: Smooth mouse parallax, GSAP ScrollTrigger transitions, optional 3D avatar switch
  */
 export default function Hero() {
   const { personal } = portfolioData;
   const resumeHref = personal.resumeUrl || '/Abhishek_Gaur_Resume.pdf';
+  
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [viewMode, setViewMode] = useState('video'); // 'video' | 'avatar'
   const [showIntroModal, setShowIntroModal] = useState(false);
-  const [avatarLoaded, setAvatarLoaded] = useState(false);
+  const [mouseParallax, setMouseParallax] = useState({ x: 0, y: 0 });
+
   const heroRef = useRef(null);
+  const videoRef = useRef(null);
   const leftColRef = useRef(null);
-  const card1Ref = useRef(null);
-  const card2Ref = useRef(null);
-  const card3Ref = useRef(null);
-  const card4Ref = useRef(null);
+  const rightColRef = useRef(null);
+  const bottomBarRef = useRef(null);
+  const targetMouse = useRef({ x: 0, y: 0 });
+  const currentMouse = useRef({ x: 0, y: 0 });
+  const animFrameId = useRef(null);
+
+  // Video Autoplay & Play/Pause Handler
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.muted = true;
+      video.playsInline = true;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => setIsPlaying(true))
+          .catch((err) => {
+            console.warn('Hero video autoplay muted fallback:', err);
+            setIsPlaying(false);
+          });
+      }
+    }
+  }, [viewMode]);
+
+  const toggleVideoPlayback = (e) => {
+    e.stopPropagation();
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      video.play().then(() => setIsPlaying(true));
+    } else {
+      video.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  // Smooth Lerped Mouse Parallax Effect
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      // Normalized between -1 and 1
+      const nx = (e.clientX / window.innerWidth - 0.5) * 2;
+      const ny = (e.clientY / window.innerHeight - 0.5) * 2;
+      targetMouse.current = { x: nx, y: ny };
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+    const render = () => {
+      currentMouse.current.x += (targetMouse.current.x - currentMouse.current.x) * 0.05;
+      currentMouse.current.y += (targetMouse.current.y - currentMouse.current.y) * 0.05;
+      setMouseParallax({
+        x: currentMouse.current.x,
+        y: currentMouse.current.y
+      });
+      animFrameId.current = requestAnimationFrame(render);
+    };
+
+    animFrameId.current = requestAnimationFrame(render);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (animFrameId.current) cancelAnimationFrame(animFrameId.current);
+    };
+  }, []);
 
   // GSAP ScrollTrigger Parallax & Fade
   useEffect(() => {
-    if (!heroRef.current || !leftColRef.current) return;
+    if (!heroRef.current) return;
 
     const ctx = gsap.context(() => {
-      // 1. Text fades & gently drifts upward on scroll
-      gsap.to(leftColRef.current, {
-        y: -90,
-        opacity: 0,
-        ease: 'power1.out',
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: 'top top',
-          end: 'bottom 40%',
-          scrub: 1.2
-        }
-      });
-
-      // 2. Floating cards drift at independent parallax depths
-      if (card1Ref.current) {
-        gsap.to(card1Ref.current, {
-          y: -140,
-          opacity: 0.1,
-          scrollTrigger: { trigger: heroRef.current, start: 'top top', end: 'bottom 50%', scrub: 1 }
-        });
-      }
-      if (card2Ref.current) {
-        gsap.to(card2Ref.current, {
-          y: -180,
-          opacity: 0.1,
-          scrollTrigger: { trigger: heroRef.current, start: 'top top', end: 'bottom 50%', scrub: 1.4 }
-        });
-      }
-      if (card3Ref.current) {
-        gsap.to(card3Ref.current, {
+      // 1. Left Typography drifts up and fades
+      if (leftColRef.current) {
+        gsap.to(leftColRef.current, {
           y: -100,
-          opacity: 0.1,
-          scrollTrigger: { trigger: heroRef.current, start: 'top top', end: 'bottom 50%', scrub: 0.8 }
+          opacity: 0,
+          ease: 'power1.out',
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: 'top top',
+            end: 'bottom 45%',
+            scrub: 1.2
+          }
         });
       }
-      if (card4Ref.current) {
-        gsap.to(card4Ref.current, {
+
+      // 2. Right HUD Card drifts up and fades
+      if (rightColRef.current) {
+        gsap.to(rightColRef.current, {
           y: -120,
-          opacity: 0.1,
-          scrollTrigger: { trigger: heroRef.current, start: 'top top', end: 'bottom 50%', scrub: 1.1 }
+          opacity: 0,
+          ease: 'power1.out',
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: 'top top',
+            end: 'bottom 45%',
+            scrub: 1.4
+          }
+        });
+      }
+
+      // 3. Bottom Scroll Indicator fades early
+      if (bottomBarRef.current) {
+        gsap.to(bottomBarRef.current, {
+          opacity: 0,
+          y: -30,
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: 'top top',
+            end: 'top -20%',
+            scrub: 0.8
+          }
+        });
+      }
+
+      // 4. Background video subtle scale & push-in
+      if (videoRef.current) {
+        gsap.to(videoRef.current, {
+          scale: 1.12,
+          opacity: 0.35,
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1
+          }
         });
       }
     }, heroRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [viewMode]);
 
   return (
     <section
       id="home"
       ref={heroRef}
-      className="relative min-h-screen lg:min-h-[105vh] w-full flex flex-col justify-between select-none pt-28 pb-10 z-10 pointer-events-none"
+      className="relative w-full h-screen min-h-[720px] max-h-[1200px] flex flex-col justify-between overflow-hidden bg-[#05070c] select-none z-10"
     >
-      {/* Subtle Volumetric Center-Right Spotlight Glow */}
-      <div className="absolute top-[42%] right-[10%] w-[650px] h-[750px] bg-radial from-cyan-500/10 via-blue-600/5 to-transparent blur-[130px] rounded-full pointer-events-none" />
+      {/* ======================================================== */}
+      {/* CINEMATIC HERO BACKGROUND (VIDEO / 3D AVATAR)            */}
+      {/* ======================================================== */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        
+        {viewMode === 'video' ? (
+          <>
+            {/* Real Background Video of Abhishek walking & posing on circular pedestal */}
+            <video
+              ref={videoRef}
+              src="/hero_video.mp4"
+              poster="/hero_mockup.jpg"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              className="absolute inset-0 w-full h-full object-cover object-[center_35%] lg:object-center transform transition-transform duration-700 ease-out will-change-transform"
+              style={{
+                transform: `scale(${1.03 + Math.abs(mouseParallax.x) * 0.02}) translate3d(${mouseParallax.x * 12}px, ${mouseParallax.y * 10}px, 0)`
+              }}
+            />
 
-      {/* Main Split Grid */}
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex items-center">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-4 items-center w-full">
+            {/* Subtle Vignettes & Seamless Background Blending */}
+            {/* Top Vignette for Navbar legibility */}
+            <div className="absolute top-0 left-0 right-0 h-44 bg-gradient-to-b from-[#05070c]/90 via-[#05070c]/40 to-transparent pointer-events-none" />
+            
+            {/* Bottom Vignette for seamless merge into AboutMe */}
+            <div className="absolute bottom-0 left-0 right-0 h-56 bg-gradient-to-t from-[#05070c] via-[#05070c]/75 to-transparent pointer-events-none" />
+
+            {/* Left Vignette for Typography Contrast */}
+            <div className="absolute top-0 bottom-0 left-0 w-1/3 sm:w-1/2 bg-gradient-to-r from-[#05070c]/80 via-[#05070c]/30 to-transparent pointer-events-none" />
+
+            {/* Right Vignette for HUD Card Contrast */}
+            <div className="absolute top-0 bottom-0 right-0 w-1/4 sm:w-1/3 bg-gradient-to-l from-[#05070c]/70 via-[#05070c]/20 to-transparent pointer-events-none" />
+            
+            {/* Subtle Ambient Golden Glow matching the stage rim lights */}
+            <div className="absolute bottom-[28%] left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none" />
+          </>
+        ) : (
+          /* 3D WebGL Avatar Mode (Alternate view) */
+          <div className="absolute inset-0 w-full h-full flex items-center justify-end pr-[10%]">
+            <Suspense fallback={null}>
+              <HeroAvatar />
+            </Suspense>
+          </div>
+        )}
+      </div>
+
+      {/* Spacer for Top Navbar */}
+      <div className="h-20 sm:h-24 pointer-events-none" />
+
+      {/* ======================================================== */}
+      {/* MAIN HERO CONTENT GRID (LEFT TYPOGRAPHY | RIGHT HUD)     */}
+      {/* ======================================================== */}
+      <div className="relative z-10 max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 w-full flex-1 flex items-center pointer-events-none">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
           {/* ==================================================== */}
-          {/* LEFT 55%: EDITORIAL PORTFOLIO TYPOGRAPHY (7 COLS)     */}
+          {/* LEFT COLUMN: EDITORIAL TYPOGRAPHY & CALL TO ACTION   */}
           {/* ==================================================== */}
           <div
             ref={leftColRef}
-            className="lg:col-span-7 flex flex-col items-start text-left pointer-events-auto space-y-5 pt-2 lg:pt-0 z-20"
+            className="lg:col-span-6 flex flex-col items-start text-left pointer-events-auto transform transition-transform duration-500 ease-out"
+            style={{
+              transform: `translate3d(${mouseParallax.x * -8}px, ${mouseParallax.y * -6}px, 0)`
+            }}
           >
-            
-            {/* Eyebrow with Cyan Accent Bar */}
-            <div className="flex items-center gap-3">
-              <span className="text-xs sm:text-sm font-mono font-bold tracking-[0.25em] text-cyan-300 uppercase">
-                ELECTRONICS ENGINEER · DEFENCE TECHNOLOGY
-              </span>
-              <div className="w-10 h-[2.5px] rounded-full bg-cyan-400 shadow-[0_0_12px_#38bdf8]" />
-            </div>
-
-            {/* Massive Chiseled 3D Chrome Typography */}
-            <div>
-              <h1 className="text-5xl sm:text-7xl lg:text-[88px] font-black tracking-[-0.04em] leading-[0.92] text-white">
-                <span className="block bg-gradient-to-b from-white via-slate-100 to-slate-400 bg-clip-text text-transparent drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
-                  ABHISHEK
-                </span>
-                <span className="inline-flex items-baseline bg-gradient-to-b from-white via-slate-100 to-slate-400 bg-clip-text text-transparent drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
-                  GAUR
-                </span>
-                {/* Pulsing Cyan Cursor */}
-                <span className="inline-block w-[4px] h-[0.78em] bg-cyan-400 ml-2 align-baseline translate-y-1 shadow-[0_0_12px_#38bdf8] animate-[pulse_1s_infinite]" />
-              </h1>
-            </div>
-
-            {/* Subline Tracker: CREATIVE ENGINEER */}
-            <div className="pt-0.5">
-              <span className="text-xs sm:text-sm font-mono font-bold tracking-[0.38em] text-neutral-400 uppercase block">
-                CREATIVE ENGINEER · B.TECH ECE
-              </span>
-            </div>
-
-            {/* Editorial Lede Description */}
-            <p className="text-sm sm:text-base text-slate-300 font-sans leading-relaxed pt-1 max-w-lg">
-              Hardware &amp; IoT innovator building intelligent systems where engineering meets imagination.
-              Undergraduate at <strong className="text-white font-semibold">Rashtriya Raksha University (RRU)</strong>,
-              specializing in mission-critical silicon, low-latency firmware, and edge defence telemetry.
+            {/* Eyebrow Label */}
+            <p className="text-xs sm:text-sm font-mono font-medium tracking-[0.28em] text-neutral-400 uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] mb-2 sm:mb-3">
+              HI, I'M
             </p>
 
-            {/* Action Buttons: VIEW MY WORK ↗ + WATCH INTRO + RESUME */}
-            <div className="flex flex-wrap items-center gap-3.5 pt-4">
-              
-              {/* Primary Action: VIEW MY WORK ↗ */}
+            {/* Massive Bold Slanted Chiseled Metallic Headline */}
+            <h1 className="text-5xl sm:text-7xl lg:text-[84px] xl:text-[94px] font-black italic tracking-[-0.035em] leading-[0.88] text-white">
+              <span className="block bg-gradient-to-b from-[#ffffff] via-[#e2e8f0] to-[#94a3b8] bg-clip-text text-transparent drop-shadow-[0_8px_30px_rgba(0,0,0,0.95)]">
+                ABHISHEK
+              </span>
+              <span className="block bg-gradient-to-b from-[#ffffff] via-[#e2e8f0] to-[#94a3b8] bg-clip-text text-transparent drop-shadow-[0_8px_30px_rgba(0,0,0,0.95)]">
+                GAUR
+              </span>
+            </h1>
+
+            {/* Subtitle: ELECTRONICS ENGINEER \n DEFENCE TECHNOLOGY */}
+            <div className="mt-4 sm:mt-5">
+              <p className="text-xs sm:text-sm font-mono font-semibold tracking-[0.26em] text-neutral-300 uppercase leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                ELECTRONICS ENGINEER
+              </p>
+              <p className="text-xs sm:text-sm font-mono font-semibold tracking-[0.26em] text-neutral-300 uppercase leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                DEFENCE TECHNOLOGY
+              </p>
+            </div>
+
+            {/* Subtle Horizontal Divider Line */}
+            <div className="w-28 sm:w-36 h-[1.5px] bg-gradient-to-r from-amber-400/80 via-neutral-500/40 to-transparent my-6 sm:my-8" />
+
+            {/* Call to Action Button: EXPLORE MY WORK → */}
+            <div className="flex items-center gap-4">
               <a
                 href="#doors"
-                className="group relative inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-cyan-500/25 via-blue-600/35 to-indigo-600/25 hover:from-cyan-500/40 hover:to-blue-600/50 text-white font-bold text-xs sm:text-sm tracking-wide border-2 border-cyan-400 shadow-[0_0_25px_rgba(56,189,248,0.35)] hover:shadow-[0_0_40px_rgba(56,189,248,0.6)] transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+                className="group relative inline-flex items-center gap-3 px-7 py-3 rounded-full bg-[#0a0f18]/85 backdrop-blur-md border border-amber-400/50 hover:border-cyan-400/90 shadow-[0_0_20px_rgba(245,158,11,0.2)] hover:shadow-[0_0_35px_rgba(56,189,248,0.45)] transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
               >
-                <span>VIEW MY WORK</span>
-                <ArrowRight className="w-4 h-4 text-cyan-300 transition-transform group-hover:translate-x-1" />
+                {/* Golden Lens Flare Accent Dot on Left Border */}
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_8px_#f59e0b] group-hover:bg-cyan-300 group-hover:shadow-[0_0_8px_#38bdf8] transition-colors" />
+
+                <span className="font-mono text-xs sm:text-sm font-bold tracking-[0.2em] text-white uppercase">
+                  EXPLORE MY WORK
+                </span>
+
+                <ArrowRight className="w-4 h-4 text-neutral-300 group-hover:text-cyan-300 group-hover:translate-x-1.5 transition-all" />
               </a>
 
-              {/* Secondary Action: ▶ WATCH INTRO */}
+              {/* Quick Info Modal Trigger */}
               <button
                 type="button"
                 onClick={() => setShowIntroModal(true)}
-                className="group inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-white/5 hover:bg-white/10 text-white font-semibold text-xs sm:text-sm border border-white/15 hover:border-cyan-400/50 shadow-lg transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+                className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 flex items-center justify-center text-neutral-300 hover:text-white transition-all hover:border-cyan-400/50 cursor-pointer"
+                title="View Engineering Profile"
+                aria-label="View Engineering Profile"
               >
-                <div className="w-7 h-7 rounded-full bg-cyan-500/20 border border-cyan-400/60 flex items-center justify-center text-cyan-300 shadow-[0_0_10px_rgba(56,189,248,0.3)] group-hover:bg-cyan-400 group-hover:text-slate-950 transition-all">
-                  <Play className="w-3 h-3 fill-current translate-x-0.5" />
-                </div>
-                <span>WATCH INTRO</span>
+                <Sparkles className="w-4 h-4 text-amber-400" />
               </button>
-
-              {/* Resume download */}
-              <a
-                href={resumeHref}
-                download="Abhishek_Gaur_Resume.pdf"
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-semibold text-xs border border-white/10 hover:border-white/20 transition-all"
-              >
-                <Download className="w-3.5 h-3.5 text-slate-400" />
-                <span>RESUME</span>
-              </a>
-
             </div>
 
           </div>
 
           {/* ==================================================== */}
-          {/* RIGHT 45%: LARGE 3D CHARACTER CLEAR SPACE (5 COLS)   */}
-          {/* Dedicated WebGL HeroAvatar (abhishek.glb)            */}
+          {/* RIGHT COLUMN: VISION STATEMENT & FLOATING HUD CARD   */}
           {/* ==================================================== */}
-          <div className="lg:col-span-5 relative min-h-[520px] sm:min-h-[600px] lg:min-h-[680px] flex items-center justify-center pointer-events-none">
-            
-            {/* 3D WebGL Canvas Layer (below cards) */}
-            <Suspense fallback={null}>
-              <HeroAvatar onLoaded={() => setAvatarLoaded(true)} />
-            </Suspense>
+          <div
+            ref={rightColRef}
+            className="lg:col-span-6 flex flex-col items-start lg:items-end text-left lg:text-right pointer-events-auto transform transition-transform duration-500 ease-out"
+            style={{
+              transform: `translate3d(${mouseParallax.x * -12}px, ${mouseParallax.y * -8}px, 0)`
+            }}
+          >
+            {/* Vision Statement Typography */}
+            <div className="mb-6 lg:mb-8 max-w-sm">
+              <p className="text-[11px] sm:text-xs font-mono font-bold tracking-[0.22em] text-neutral-300 uppercase leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                BUILDING
+              </p>
+              <p className="text-[11px] sm:text-xs font-mono font-bold tracking-[0.22em] text-neutral-300 uppercase leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                INTELLIGENT SYSTEMS
+              </p>
+              <p className="text-[11px] sm:text-xs font-mono font-bold tracking-[0.22em] text-neutral-300 uppercase leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                FOR A SMARTER TOMORROW
+              </p>
+            </div>
 
-            {/* Floating Cards Layered AROUND the 3D Character (No obstruction of face/body) */}
-            <div className="relative w-full h-full min-h-[520px] pointer-events-none z-10">
+            {/* Futuristic Glass HUD Card matching reference screenshot */}
+            <div className="relative w-full max-w-xs sm:max-w-sm rounded-2xl bg-[#070b14]/75 backdrop-blur-xl border border-white/10 p-5 sm:p-6 shadow-[0_25px_60px_rgba(0,0,0,0.85)] group">
               
-              {/* Card 1: Embedded Systems (Top-Left of right zone, beside shoulder) */}
-              <a
-                ref={card1Ref}
-                href="#skills"
-                className="absolute top-[8%] -left-6 sm:-left-10 lg:-left-12 z-10 pointer-events-auto hidden md:flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-[#09101d]/85 backdrop-blur-xl border border-cyan-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.7)] hover:border-cyan-300 hover:scale-105 transition-all group"
-              >
-                <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center shrink-0">
-                  <Cpu className="w-3.5 h-3.5 text-cyan-300" />
-                </div>
-                <div className="text-left">
-                  <div className="text-xs font-bold text-white group-hover:text-cyan-300 leading-tight">
-                    Embedded Systems
-                  </div>
-                  <div className="text-[9px] font-mono text-neutral-400">
-                    Build. Integrate. Innovate.
-                  </div>
-                </div>
-              </a>
+              {/* Cyber Corner Notches / Brackets */}
+              <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-cyan-400/60 rounded-tl-lg pointer-events-none" />
+              <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-cyan-400/60 rounded-tr-lg pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-cyan-400/60 rounded-bl-lg pointer-events-none" />
+              <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-cyan-400/60 rounded-br-lg pointer-events-none" />
 
-              {/* Card 2: Defence Technology (Top-Right, behind upper right) */}
-              <a
-                ref={card2Ref}
-                href="#about"
-                className="absolute top-[12%] right-0 sm:-right-4 z-10 pointer-events-auto hidden md:flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-[#09101d]/85 backdrop-blur-xl border border-cyan-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.7)] hover:border-cyan-300 hover:scale-105 transition-all group"
-              >
-                <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center shrink-0">
-                  <Shield className="w-3.5 h-3.5 text-cyan-300" />
-                </div>
-                <div className="text-left">
-                  <div className="text-xs font-bold text-white group-hover:text-cyan-300 leading-tight">
-                    Defence Technology
+              <div className="space-y-4 text-left">
+                
+                {/* Row 1: HARDWARE & IoT */}
+                <a
+                  href="#skills"
+                  className="flex items-center gap-3.5 p-2 rounded-xl hover:bg-white/5 transition-colors group/item cursor-pointer"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-400/40 flex items-center justify-center shrink-0 group-hover/item:border-cyan-300 transition-colors">
+                    <Cpu className="w-4 h-4 text-cyan-300" />
                   </div>
-                  <div className="text-[9px] font-mono text-neutral-400">
-                    For a Safer Tomorrow.
-                  </div>
-                </div>
-              </a>
+                  <span className="font-mono text-xs sm:text-sm font-bold tracking-[0.16em] text-neutral-200 group-hover/item:text-cyan-300 transition-colors uppercase">
+                    HARDWARE &amp; IoT
+                  </span>
+                </a>
 
-              {/* Card 3: IoT & Smart Systems (Bottom-Left, near waist height) */}
-              <a
-                ref={card3Ref}
-                href="#doors"
-                className="absolute bottom-[24%] -left-8 sm:-left-12 lg:-left-16 z-20 pointer-events-auto hidden md:flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-[#09101d]/85 backdrop-blur-xl border border-cyan-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.7)] hover:border-cyan-300 hover:scale-105 transition-all group"
-              >
-                <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center shrink-0">
-                  <RoboticArmIcon className="w-4 h-4 text-cyan-300" />
-                </div>
-                <div className="text-left">
-                  <div className="text-xs font-bold text-white group-hover:text-cyan-300 leading-tight">
-                    IoT &amp; Smart Systems
+                {/* Row 2: DEFENCE TECH */}
+                <a
+                  href="#about"
+                  className="flex items-center gap-3.5 p-2 rounded-xl hover:bg-white/5 transition-colors group/item cursor-pointer"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-400/40 flex items-center justify-center shrink-0 group-hover/item:border-cyan-300 transition-colors">
+                    <Shield className="w-4 h-4 text-cyan-300" />
                   </div>
-                  <div className="text-[9px] font-mono text-neutral-400">
-                    Connect. Automate. Evolve.
-                  </div>
-                </div>
-              </a>
+                  <span className="font-mono text-xs sm:text-sm font-bold tracking-[0.16em] text-neutral-200 group-hover/item:text-cyan-300 transition-colors uppercase">
+                    DEFENCE TECH
+                  </span>
+                </a>
 
-              {/* Card 4: SIH 2026 Winner (Bottom-Right, near platform base) */}
-              <a
-                ref={card4Ref}
-                href="#achievements"
-                className="absolute bottom-[16%] right-0 sm:-right-4 z-20 pointer-events-auto hidden md:flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-[#09101d]/85 backdrop-blur-xl border border-amber-400/50 shadow-[0_10px_30px_rgba(0,0,0,0.7)] hover:border-amber-300 hover:scale-105 transition-all group"
-              >
-                <div className="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-400/50 flex items-center justify-center shrink-0">
-                  <Trophy className="w-4 h-4 text-amber-400" />
-                </div>
-                <div className="text-left">
-                  <div className="text-xs font-bold text-white group-hover:text-amber-300 leading-tight">
-                    SIH 2026 Winner
+                {/* Row 3: EMBEDDED SYSTEMS */}
+                <a
+                  href="#doors"
+                  className="flex items-center gap-3.5 p-2 rounded-xl hover:bg-white/5 transition-colors group/item cursor-pointer"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-400/40 flex items-center justify-center shrink-0 group-hover/item:border-cyan-300 transition-colors">
+                    <Code2 className="w-4 h-4 text-cyan-300" />
                   </div>
-                  <div className="text-[10px] font-mono text-amber-400">
-                    #1 Hardware · #8 Overall
-                  </div>
-                </div>
-              </a>
+                  <span className="font-mono text-xs sm:text-sm font-bold tracking-[0.16em] text-neutral-200 group-hover/item:text-cyan-300 transition-colors uppercase">
+                    EMBEDDED SYSTEMS
+                  </span>
+                </a>
+
+              </div>
 
             </div>
 
@@ -306,29 +394,79 @@ export default function Hero() {
       </div>
 
       {/* ======================================================== */}
-      {/* BOTTOM SCROLL INDICATOR                                  */}
+      {/* BOTTOM BAR: SCROLL TO EXPLORE & VIEW SWITCHER            */}
       {/* ======================================================== */}
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 w-full pt-4 z-20 flex justify-between items-center pointer-events-auto">
-        <a
-          href="#about"
-          className="inline-flex items-center gap-2.5 text-xs font-mono text-neutral-400 hover:text-cyan-300 transition-colors group cursor-pointer"
-        >
-          <div className="w-4 h-6 rounded-full border border-neutral-500 group-hover:border-cyan-400 flex items-start justify-center p-1 transition-colors">
-            <span className="w-1 h-1.5 rounded-full bg-cyan-400 animate-bounce" />
-          </div>
-          <span className="tracking-wider">SCROLL TO EXPLORE</span>
-          <ChevronDown className="w-3.5 h-3.5 text-cyan-400 group-hover:translate-y-0.5 transition-transform" />
-        </a>
-
-        {/* Live Status Indicator */}
-        <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-slate-400">
-          <span className={`w-2 h-2 rounded-full ${avatarLoaded ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]' : 'bg-cyan-400'} animate-pulse`} />
-          <span>{avatarLoaded ? '3D WebGL Avatar Active' : 'Loading 3D Avatar...'}</span>
+      <div
+        ref={bottomBarRef}
+        className="relative z-20 max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 w-full pb-6 pt-2 flex items-center justify-between pointer-events-auto"
+      >
+        {/* Left: Video Play/Pause Control */}
+        <div className="flex items-center gap-2">
+          {viewMode === 'video' && (
+            <button
+              type="button"
+              onClick={toggleVideoPlayback}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40 hover:bg-black/60 border border-white/10 text-neutral-300 hover:text-white text-[11px] font-mono transition-all backdrop-blur-md cursor-pointer"
+              title={isPlaying ? "Pause cinematic background" : "Play cinematic background"}
+            >
+              {isPlaying ? (
+                <>
+                  <Pause className="w-3 h-3 text-cyan-400" />
+                  <span className="hidden sm:inline">CINEMATIC VIDEO</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-3 h-3 text-amber-400 fill-amber-400" />
+                  <span className="hidden sm:inline">PAUSED</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
+
+        {/* Center: Mouse Outline + SCROLL TO EXPLORE with Guideline */}
+        <div className="flex flex-col items-center">
+          <a
+            href="#about"
+            className="flex items-center gap-2.5 text-[10px] sm:text-xs font-mono font-medium tracking-[0.28em] text-neutral-400 hover:text-cyan-300 transition-colors uppercase group cursor-pointer"
+          >
+            {/* Mouse Icon Capsule with bouncing scroll wheel */}
+            <div className="w-4 h-6 rounded-full border border-neutral-400/70 group-hover:border-cyan-400 flex items-start justify-center p-1 transition-colors">
+              <span className="w-1 h-1.5 rounded-full bg-cyan-400 animate-bounce" />
+            </div>
+            <span>SCROLL TO EXPLORE</span>
+          </a>
+
+          {/* Vertical Guideline extending downward */}
+          <div className="w-[1px] h-6 bg-gradient-to-b from-neutral-500/60 to-transparent mt-2" />
+        </div>
+
+        {/* Right: Switch Mode (Cinematic Video vs 3D Avatar) */}
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => setViewMode(prev => prev === 'video' ? 'avatar' : 'video')}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40 hover:bg-black/60 border border-white/10 text-neutral-300 hover:text-white text-[11px] font-mono transition-all backdrop-blur-md cursor-pointer"
+            title="Toggle between cinematic video and interactive 3D WebGL avatar"
+          >
+            {viewMode === 'video' ? (
+              <>
+                <Box className="w-3 h-3 text-cyan-400" />
+                <span className="hidden sm:inline">SWITCH TO 3D AVATAR</span>
+              </>
+            ) : (
+              <>
+                <Film className="w-3 h-3 text-amber-400" />
+                <span className="hidden sm:inline">SWITCH TO VIDEO</span>
+              </>
+            )}
+          </button>
+        </div>
+
       </div>
 
       {/* ======================================================== */}
-      {/* CINEMATIC INTRO SPOTLIGHT MODAL                          */}
+      {/* ENGINEERING SPOTLIGHT MODAL                              */}
       {/* ======================================================== */}
       {showIntroModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-2xl animate-fade-in pointer-events-auto">
@@ -349,7 +487,7 @@ export default function Hero() {
 
               <button
                 onClick={() => setShowIntroModal(false)}
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-neutral-300 hover:text-white transition-colors"
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-neutral-300 hover:text-white transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="w-4 h-4" />
@@ -402,7 +540,7 @@ export default function Hero() {
               <a
                 href="#doors"
                 onClick={() => setShowIntroModal(false)}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/25 transition-all"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/25 transition-all cursor-pointer"
               >
                 <Compass className="w-3.5 h-3.5" />
                 <span>Enter 3D Doors Hallway</span>
@@ -412,7 +550,7 @@ export default function Hero() {
               <a
                 href={resumeHref}
                 download="Abhishek_Gaur_Resume.pdf"
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/5 hover:bg-white/20 text-white font-semibold text-xs border border-white/15 transition-all"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/5 hover:bg-white/20 text-white font-semibold text-xs border border-white/15 transition-all cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5 text-slate-400" />
                 <span>Download Resume</span>
