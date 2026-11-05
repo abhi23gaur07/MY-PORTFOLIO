@@ -187,9 +187,7 @@ export default function Hero({ mode = 'dark' }) {
     <section
       id="home"
       ref={heroRef}
-      className={`relative w-full h-screen min-h-[720px] max-h-[1200px] flex flex-col justify-between overflow-hidden select-none z-10 transition-colors duration-500 ${
-        isDark ? 'bg-[#05070c]' : 'bg-[#eef3f8]'
-      }`}
+      className="relative w-full h-screen min-h-[720px] max-h-[1200px] flex flex-col justify-between overflow-hidden select-none z-10 bg-[#05070c]"
     >
       {/* ======================================================== */}
       {/* CINEMATIC HERO BACKGROUND (HIGH RESOLUTION VIDEO)         */}
@@ -208,41 +206,24 @@ export default function Hero({ mode = 'dark' }) {
               muted
               playsInline
               preload="auto"
-              className={`absolute inset-0 w-full h-full object-cover object-[center_35%] lg:object-center select-none will-change-transform ${
-                !isDark ? 'brightness-[1.08] contrast-[1.02]' : ''
-              }`}
+              className="absolute inset-0 w-full h-full object-cover object-[center_35%] lg:object-center select-none will-change-transform"
               style={{
-                filter: isDark ? 'contrast(1.08) brightness(1.03) saturate(1.08)' : 'contrast(1.04) brightness(1.06) saturate(1.06)',
+                filter: 'contrast(1.08) brightness(1.03) saturate(1.08)',
                 imageRendering: 'high-quality',
                 WebkitBackfaceVisibility: 'hidden',
                 transform: `translate3d(${mouseParallax.x * 6}px, ${mouseParallax.y * 5}px, 0)`
               }}
             />
 
-            {/* Seamless Edge Blending adapted to Dark/Light mode */}
+            {/* Seamless Edge Blending - Subtle dark vignettes so video is 100% visible in all modes */}
             {/* Top Vignette for Navbar legibility */}
-            <div className={`absolute top-0 left-0 right-0 h-32 pointer-events-none ${
-              isDark 
-                ? 'bg-gradient-to-b from-[#05070c]/85 via-[#05070c]/30 to-transparent' 
-                : 'bg-gradient-to-b from-[#eef3f8]/90 via-[#eef3f8]/40 to-transparent'
-            }`} />
+            <div className="absolute top-0 left-0 right-0 h-28 pointer-events-none bg-gradient-to-b from-[#05070c]/70 via-[#05070c]/20 to-transparent" />
             
             {/* Bottom Vignette for seamless merge into AboutMe */}
-            <div className={`absolute bottom-0 left-0 right-0 h-44 pointer-events-none ${
-              isDark 
-                ? 'bg-gradient-to-t from-[#05070c] via-[#05070c]/70 to-transparent' 
-                : 'bg-gradient-to-t from-[#eef3f8] via-[#eef3f8]/75 to-transparent'
-            }`} />
+            <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none bg-gradient-to-t from-[#05070c]/90 via-[#05070c]/40 to-transparent" />
 
-            {/* Left Soft Contrast Illumination in Light Mode for 100% Text Readability */}
-            {!isDark && (
-              <div className="absolute top-0 bottom-0 left-0 w-full lg:w-[60%] bg-gradient-to-r from-[#eef3f8]/95 via-[#eef3f8]/80 to-transparent pointer-events-none z-0" />
-            )}
-
-            {/* Subtle Ambient Glow */}
-            <div className={`absolute bottom-[28%] left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-[120px] pointer-events-none ${
-              isDark ? 'bg-amber-500/10' : 'bg-blue-400/15'
-            }`} />
+            {/* Subtle Ambient Radial Glow */}
+            <div className="absolute bottom-[28%] left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-[120px] pointer-events-none bg-amber-500/10" />
           </>
         ) : (
           /* 3D WebGL Avatar Mode (Alternate view) */
@@ -258,105 +239,72 @@ export default function Hero({ mode = 'dark' }) {
       <div className="h-20 sm:h-24 pointer-events-none" />
 
       {/* ======================================================== */}
-      {/* MAIN HERO CONTENT GRID (LEFT TYPOGRAPHY | RIGHT HUD)     */}
+      {/* MAIN HERO CONTENT (LEFT TYPOGRAPHY | RIGHT HUD)          */}
       {/* ======================================================== */}
-      <div className="relative z-10 max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 w-full flex-1 flex items-center pointer-events-none">
-        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div className="relative z-10 max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-12 w-full flex-1 flex items-center pointer-events-none">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           
           {/* ==================================================== */}
           {/* LEFT COLUMN: EDITORIAL TYPOGRAPHY & CALL TO ACTION   */}
+          {/* Shifted to the left, completely transparent box      */}
           {/* ==================================================== */}
           <div
             ref={leftColRef}
-            className={`lg:col-span-6 flex flex-col items-start text-left pointer-events-auto transform transition-transform duration-500 ease-out ${
-              !isDark ? 'p-6 sm:p-8 rounded-3xl bg-white/85 backdrop-blur-xl border border-white/80 shadow-2xl shadow-blue-900/10' : ''
-            }`}
+            className="lg:col-span-5 flex flex-col items-start text-left pointer-events-auto transform transition-transform duration-500 ease-out bg-transparent border-none shadow-none p-0 lg:-translate-x-2 xl:-translate-x-4"
             style={{
               transform: `translate3d(${mouseParallax.x * -6}px, ${mouseParallax.y * -5}px, 0)`
             }}
           >
             {/* Eyebrow Label */}
-            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] sm:text-xs font-mono font-bold tracking-[0.22em] uppercase mb-3 backdrop-blur-md shadow-xs ${
-              isDark
-                ? 'bg-cyan-500/10 border border-cyan-400/30 text-cyan-300'
-                : 'bg-blue-100/90 border border-blue-400/50 text-blue-800'
-            }`}>
-              <Sparkles className={`w-3.5 h-3.5 ${isDark ? 'text-cyan-400' : 'text-blue-600'}`} />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] sm:text-xs font-mono font-bold tracking-[0.22em] uppercase mb-3 bg-white/10 border border-white/20 text-cyan-300 backdrop-blur-md shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
               <span>FULL-STACK &amp; HARDWARE INNOVATOR</span>
             </div>
 
             {/* Massive Bold Slanted Chiseled Metallic Headline */}
-            <h1 className="text-5xl sm:text-7xl lg:text-[80px] xl:text-[92px] font-black italic tracking-[-0.035em] leading-[0.88]">
-              <span className={`block ${
-                isDark
-                  ? 'bg-gradient-to-b from-[#ffffff] via-[#e2e8f0] to-[#94a3b8] bg-clip-text text-transparent drop-shadow-[0_8px_30px_rgba(0,0,0,0.95)]'
-                  : 'text-slate-950 drop-shadow-[0_2px_12px_rgba(255,255,255,0.9)]'
-              }`}>
+            <h1 className="text-5xl sm:text-7xl lg:text-[76px] xl:text-[88px] font-black italic tracking-[-0.035em] leading-[0.88]">
+              <span className="block bg-gradient-to-b from-white via-slate-100 to-slate-400 bg-clip-text text-transparent drop-shadow-[0_8px_30px_rgba(0,0,0,0.95)]">
                 ABHISHEK
               </span>
-              <span className={`block ${
-                isDark
-                  ? 'bg-gradient-to-b from-[#ffffff] via-[#e2e8f0] to-[#94a3b8] bg-clip-text text-transparent drop-shadow-[0_8px_30px_rgba(0,0,0,0.95)]'
-                  : 'text-blue-700 drop-shadow-[0_2px_12px_rgba(255,255,255,0.9)]'
-              }`}>
+              <span className="block bg-gradient-to-b from-white via-slate-100 to-slate-400 bg-clip-text text-transparent drop-shadow-[0_8px_30px_rgba(0,0,0,0.95)]">
                 GAUR
               </span>
             </h1>
 
-            {/* Subtitle: HARDWARE PROFICIENCY · FRONTEND & IoT WEBSITES */}
+            {/* Subtitles: ELECTRONICS ENGINEER · DEFENCE TECHNOLOGY (Matching Mockup 1:1) */}
             <div className="mt-4 sm:mt-5 space-y-1.5">
-              <p className={`text-xs sm:text-sm font-mono font-bold tracking-[0.24em] uppercase ${
-                isDark ? 'text-neutral-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]' : 'text-slate-950 font-black'
-              }`}>
-                HARDWARE &amp; SILICON PROFICIENCY
+              <p className="text-xs sm:text-sm font-mono font-bold tracking-[0.24em] uppercase text-neutral-200 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
+                ELECTRONICS ENGINEER
               </p>
-              <p className={`text-xs sm:text-sm font-mono font-bold tracking-[0.24em] uppercase ${
-                isDark ? 'text-cyan-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]' : 'text-blue-700 font-black'
-              }`}>
-                FRONTEND &amp; IoT-BASED WEBSITES
+              <p className="text-xs sm:text-sm font-mono font-bold tracking-[0.24em] uppercase text-cyan-300 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
+                DEFENCE TECHNOLOGY
               </p>
             </div>
 
             {/* Subtle Horizontal Divider Line */}
-            <div className={`w-36 sm:w-48 h-[3px] rounded-full my-5 sm:my-6 ${
-              isDark
-                ? 'bg-gradient-to-r from-amber-400 via-cyan-400 to-transparent shadow-[0_0_10px_#38bdf8]'
-                : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 shadow-[0_0_12px_rgba(37,99,235,0.6)]'
-            }`} />
+            <div className="w-36 sm:w-48 h-[2px] rounded-full my-5 sm:my-6 bg-gradient-to-r from-amber-400 via-cyan-400 to-transparent shadow-[0_0_12px_#38bdf8]" />
 
             {/* Call to Action Buttons: EXPLORE MY WORK → + RESUME ⤓ */}
             <div className="flex flex-wrap items-center gap-3.5">
               <a
                 href="#doors"
-                className={`group relative inline-flex items-center gap-2.5 px-6 py-3 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] cursor-pointer shadow-md ${
-                  isDark
-                    ? 'bg-[#0a0f18]/85 border border-amber-400/50 hover:border-cyan-400/90 shadow-[0_0_20px_rgba(245,158,11,0.2)] text-white'
-                    : 'bg-blue-600 hover:bg-blue-700 text-white font-extrabold shadow-blue-500/30'
-                }`}
+                className="group relative inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 hover:border-cyan-400/90 shadow-[0_0_20px_rgba(245,158,11,0.2)] text-white font-mono text-xs sm:text-sm font-bold tracking-[0.2em] uppercase backdrop-blur-md transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
               >
-                <span className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                  isDark ? 'bg-amber-400 shadow-[0_0_8px_#f59e0b] group-hover:bg-cyan-300' : 'bg-white'
-                }`} />
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_8px_#f59e0b] group-hover:bg-cyan-300 transition-colors" />
                 <span className="font-mono text-xs sm:text-sm font-bold tracking-[0.2em] uppercase">
                   EXPLORE MY WORK
                 </span>
-                <ArrowRight className={`w-4 h-4 transition-all group-hover:translate-x-1.5 ${
-                  isDark ? 'text-neutral-300 group-hover:text-cyan-300' : 'text-white'
-                }`} />
+                <ArrowRight className="w-4 h-4 text-neutral-300 group-hover:text-cyan-300 transition-all group-hover:translate-x-1.5" />
               </a>
 
               {/* Direct Resume Download in Hero */}
               <a
                 href={resumeHref}
                 download="Abhishek_Gaur_Resume.pdf"
-                className={`inline-flex items-center gap-2 px-5 py-3 rounded-full font-mono font-bold text-xs sm:text-sm backdrop-blur-md transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] cursor-pointer shadow-sm ${
-                  isDark
-                    ? 'bg-white/5 hover:bg-white/10 text-cyan-300 hover:text-white border border-cyan-400/30 hover:border-cyan-300 shadow-[0_0_15px_rgba(56,189,248,0.15)]'
-                    : 'bg-blue-50 hover:bg-blue-100 text-blue-700 hover:text-blue-900 border border-blue-300'
-                }`}
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/5 hover:bg-white/15 text-cyan-300 hover:text-white border border-cyan-400/40 hover:border-cyan-300 font-mono text-xs sm:text-sm font-bold tracking-[0.18em] uppercase backdrop-blur-md transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] cursor-pointer shadow-[0_0_15px_rgba(56,189,248,0.15)]"
                 title="Download Abhishek Gaur's Resume"
               >
-                <Download className={`w-4 h-4 ${isDark ? 'text-cyan-400' : 'text-blue-600'}`} />
+                <Download className="w-4 h-4 text-cyan-400" />
                 <span>RESUME</span>
               </a>
 
@@ -364,15 +312,11 @@ export default function Hero({ mode = 'dark' }) {
               <button
                 type="button"
                 onClick={() => setShowIntroModal(true)}
-                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer ${
-                  isDark
-                    ? 'bg-white/5 hover:bg-white/10 border border-white/15 text-neutral-300 hover:text-white hover:border-cyan-400/50'
-                    : 'bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 hover:border-blue-500 shadow-xs'
-                }`}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer bg-white/5 hover:bg-white/15 border border-white/20 text-neutral-300 hover:text-white hover:border-cyan-400/60 backdrop-blur-md"
                 title="View Engineering Profile"
                 aria-label="View Engineering Profile"
               >
-                <Sparkles className={`w-4 h-4 ${isDark ? 'text-amber-400' : 'text-amber-500'}`} />
+                <Sparkles className="w-4 h-4 text-amber-400" />
               </button>
             </div>
 
@@ -380,157 +324,107 @@ export default function Hero({ mode = 'dark' }) {
 
           {/* ==================================================== */}
           {/* RIGHT COLUMN: VISION STATEMENT & EXPANDED CYBER HUD  */}
-          {/* Hardware, IoT Websites, Software/Frontend, Embedded  */}
+          {/* Completely transparent box - only text & icons visible*/}
           {/* ==================================================== */}
           <div
             ref={rightColRef}
-            className="lg:col-span-6 flex flex-col items-start lg:items-end text-left lg:text-right pointer-events-auto transform transition-transform duration-500 ease-out"
+            className="lg:col-span-5 lg:col-start-8 xl:col-span-4 xl:col-start-9 flex flex-col items-start lg:items-end text-left lg:text-right pointer-events-auto transform transition-transform duration-500 ease-out"
             style={{
               transform: `translate3d(${mouseParallax.x * -10}px, ${mouseParallax.y * -7}px, 0)`
             }}
           >
             {/* Vision Statement Typography */}
-            <div className="mb-5 lg:mb-6 max-w-sm">
-              <p className={`text-[11px] sm:text-xs font-mono font-bold tracking-[0.22em] uppercase leading-relaxed ${
-                isDark ? 'text-neutral-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]' : 'text-slate-800'
-              }`}>
+            <div className="mb-4 lg:mb-5 max-w-sm">
+              <p className="text-[11px] sm:text-xs font-mono font-bold tracking-[0.24em] uppercase leading-relaxed text-neutral-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
                 BUILDING
               </p>
-              <p className={`text-[11px] sm:text-xs font-mono font-bold tracking-[0.22em] uppercase leading-relaxed ${
-                isDark ? 'text-cyan-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]' : 'text-blue-600 font-extrabold'
-              }`}>
+              <p className="text-[11px] sm:text-xs font-mono font-bold tracking-[0.24em] uppercase leading-relaxed text-cyan-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
                 INTELLIGENT SYSTEMS
               </p>
-              <p className={`text-[11px] sm:text-xs font-mono font-bold tracking-[0.22em] uppercase leading-relaxed ${
-                isDark ? 'text-neutral-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]' : 'text-slate-800'
-              }`}>
-                FROM SILICON TO THE WEB
+              <p className="text-[11px] sm:text-xs font-mono font-bold tracking-[0.24em] uppercase leading-relaxed text-neutral-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+                FOR A SMARTER TOMORROW
               </p>
             </div>
 
-            {/* Futuristic Glass HUD Card showcasing all qualities */}
-            <div className={`relative w-full max-w-sm sm:max-w-md rounded-2xl backdrop-blur-xl p-5 group transition-colors duration-300 ${
-              isDark
-                ? 'bg-[#070b14]/80 border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.85)] text-white'
-                : 'bg-white/95 border border-slate-200/90 shadow-[0_20px_50px_rgba(0,0,0,0.12)] text-slate-900'
-            }`}>
+            {/* Completely Transparent Cyber HUD Card (Only text, brackets & icons visible) */}
+            <div className="relative w-full max-w-sm sm:max-w-md rounded-2xl bg-transparent border border-white/15 p-4 sm:p-5 group transition-colors duration-300">
               
-              {/* Cyber Corner Notches / Brackets */}
-              <div className={`absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 rounded-tl-lg pointer-events-none ${
-                isDark ? 'border-cyan-400/60' : 'border-blue-500/70'
-              }`} />
-              <div className={`absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 rounded-tr-lg pointer-events-none ${
-                isDark ? 'border-cyan-400/60' : 'border-blue-500/70'
-              }`} />
-              <div className={`absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 rounded-bl-lg pointer-events-none ${
-                isDark ? 'border-cyan-400/60' : 'border-blue-500/70'
-              }`} />
-              <div className={`absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 rounded-br-lg pointer-events-none ${
-                isDark ? 'border-cyan-400/60' : 'border-blue-500/70'
-              }`} />
+              {/* Cyber Corner Notches / Brackets (matching Image 1) */}
+              <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-cyan-400/80 rounded-tl-sm pointer-events-none" />
+              <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-cyan-400/80 rounded-tr-sm pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-cyan-400/80 rounded-bl-sm pointer-events-none" />
+              <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-cyan-400/80 rounded-br-sm pointer-events-none" />
 
-              <div className="space-y-2.5 text-left">
+              <div className="space-y-2 text-left">
                 
-                {/* Row 1: SOFTWARE & FRONTEND DEVELOPMENT */}
-                <a
-                  href="#about"
-                  className={`flex items-center gap-3 p-2.5 rounded-xl transition-colors group/item cursor-pointer border ${
-                    isDark
-                      ? 'border-transparent hover:bg-white/5 hover:border-cyan-400/30'
-                      : 'border-transparent hover:bg-slate-100 hover:border-blue-400/40'
-                  }`}
-                >
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
-                    isDark ? 'bg-cyan-500/10 border border-cyan-400/40 group-hover/item:border-cyan-300' : 'bg-blue-100 border border-blue-300'
-                  }`}>
-                    <Code2 className={`w-4 h-4 ${isDark ? 'text-cyan-300' : 'text-blue-700'}`} />
-                  </div>
-                  <div className="min-w-0">
-                    <span className={`font-mono text-xs sm:text-sm font-bold tracking-[0.14em] uppercase block transition-colors ${
-                      isDark ? 'text-white group-hover/item:text-cyan-300' : 'text-slate-900 group-hover/item:text-blue-700'
-                    }`}>
-                      SOFTWARE &amp; FRONTEND DEV
-                    </span>
-                    <span className={`text-[10px] font-mono font-semibold block ${isDark ? 'text-cyan-400' : 'text-blue-600'}`}>
-                      React · Next.js · TypeScript · WebGL
-                    </span>
-                  </div>
-                </a>
-
-                {/* Row 2: IoT-BASED WEBSITES & CLOUD */}
-                <a
-                  href="#doors"
-                  className={`flex items-center gap-3 p-2.5 rounded-xl transition-colors group/item cursor-pointer border ${
-                    isDark
-                      ? 'border-transparent hover:bg-white/5 hover:border-emerald-400/30'
-                      : 'border-transparent hover:bg-slate-100 hover:border-emerald-400/40'
-                  }`}
-                >
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
-                    isDark ? 'bg-emerald-500/10 border border-emerald-400/40 group-hover/item:border-emerald-300' : 'bg-emerald-100 border border-emerald-300'
-                  }`}>
-                    <Wifi className={`w-4 h-4 ${isDark ? 'text-emerald-300' : 'text-emerald-700'}`} />
-                  </div>
-                  <div className="min-w-0">
-                    <span className={`font-mono text-xs sm:text-sm font-bold tracking-[0.14em] uppercase block transition-colors ${
-                      isDark ? 'text-white group-hover/item:text-emerald-300' : 'text-slate-900 group-hover/item:text-emerald-700'
-                    }`}>
-                      IoT-BASED WEBSITES &amp; CLOUD
-                    </span>
-                    <span className={`text-[10px] font-mono font-semibold block ${isDark ? 'text-emerald-400' : 'text-emerald-700'}`}>
-                      Real-Time Sensor Telemetry · MQTT
-                    </span>
-                  </div>
-                </a>
-
-                {/* Row 3: HARDWARE PROFICIENCY (ESP32, Arduino, Raspberry Pi, STM32) */}
+                {/* Row 1: HARDWARE & IoT */}
                 <a
                   href="#skills"
-                  className={`flex items-center gap-3 p-2.5 rounded-xl transition-colors group/item cursor-pointer border ${
-                    isDark
-                      ? 'border-transparent hover:bg-white/5 hover:border-blue-400/30'
-                      : 'border-transparent hover:bg-slate-100 hover:border-blue-400/40'
-                  }`}
+                  className="flex items-center gap-3 p-2 rounded-xl transition-all group/item cursor-pointer bg-transparent hover:bg-white/10 border border-transparent hover:border-cyan-400/30"
                 >
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
-                    isDark ? 'bg-blue-500/10 border border-blue-400/40 group-hover/item:border-blue-300' : 'bg-blue-100 border border-blue-300'
-                  }`}>
-                    <Cpu className={`w-4 h-4 ${isDark ? 'text-blue-300' : 'text-blue-700'}`} />
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-cyan-500/10 border border-cyan-400/40 group-hover/item:border-cyan-300 transition-colors">
+                    <Cpu className="w-4 h-4 text-cyan-300" />
                   </div>
                   <div className="min-w-0">
-                    <span className={`font-mono text-xs sm:text-sm font-bold tracking-[0.14em] uppercase block transition-colors ${
-                      isDark ? 'text-white group-hover/item:text-blue-300' : 'text-slate-900 group-hover/item:text-blue-700'
-                    }`}>
-                      HARDWARE PROFICIENCY
+                    <span className="font-mono text-xs sm:text-sm font-bold tracking-[0.14em] uppercase block text-white group-hover/item:text-cyan-300 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] transition-colors">
+                      HARDWARE &amp; IoT
                     </span>
-                    <span className={`text-[10px] font-mono font-semibold block ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
+                    <span className="text-[10px] font-mono font-semibold block text-cyan-400 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
                       ESP32 · Arduino · Raspberry Pi · STM32
                     </span>
                   </div>
                 </a>
 
-                {/* Row 4: EMBEDDED C/C++ ARCHITECTURE & IoT PROFICIENCY */}
+                {/* Row 2: DEFENCE TECH */}
                 <a
-                  href="#achievements"
-                  className={`flex items-center gap-3 p-2.5 rounded-xl transition-colors group/item cursor-pointer border ${
-                    isDark
-                      ? 'border-transparent hover:bg-white/5 hover:border-amber-400/30'
-                      : 'border-transparent hover:bg-slate-100 hover:border-amber-400/40'
-                  }`}
+                  href="#about"
+                  className="flex items-center gap-3 p-2 rounded-xl transition-all group/item cursor-pointer bg-transparent hover:bg-white/10 border border-transparent hover:border-amber-400/30"
                 >
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
-                    isDark ? 'bg-amber-500/10 border border-amber-400/40 group-hover/item:border-amber-300' : 'bg-amber-100 border border-amber-300'
-                  }`}>
-                    <Terminal className={`w-4 h-4 ${isDark ? 'text-amber-300' : 'text-amber-700'}`} />
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-amber-500/10 border border-amber-400/40 group-hover/item:border-amber-300 transition-colors">
+                    <Shield className="w-4 h-4 text-amber-300" />
                   </div>
                   <div className="min-w-0">
-                    <span className={`font-mono text-xs sm:text-sm font-bold tracking-[0.14em] uppercase block transition-colors ${
-                      isDark ? 'text-white group-hover/item:text-amber-300' : 'text-slate-900 group-hover/item:text-amber-700'
-                    }`}>
-                      EMBEDDED C/C++ &amp; IoT
+                    <span className="font-mono text-xs sm:text-sm font-bold tracking-[0.14em] uppercase block text-white group-hover/item:text-amber-300 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] transition-colors">
+                      DEFENCE TECH
                     </span>
-                    <span className={`text-[10px] font-mono font-semibold block ${isDark ? 'text-amber-400' : 'text-amber-700'}`}>
-                      C/C++ Architecture · SIH #1 Hardware Category
+                    <span className="text-[10px] font-mono font-semibold block text-amber-400 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
+                      Tactical Systems · SIH #1 Hardware Category
+                    </span>
+                  </div>
+                </a>
+
+                {/* Row 3: EMBEDDED SYSTEMS */}
+                <a
+                  href="#achievements"
+                  className="flex items-center gap-3 p-2 rounded-xl transition-all group/item cursor-pointer bg-transparent hover:bg-white/10 border border-transparent hover:border-emerald-400/30"
+                >
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-emerald-500/10 border border-emerald-400/40 group-hover/item:border-emerald-300 transition-colors">
+                    <Terminal className="w-4 h-4 text-emerald-300" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="font-mono text-xs sm:text-sm font-bold tracking-[0.14em] uppercase block text-white group-hover/item:text-emerald-300 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] transition-colors">
+                      EMBEDDED SYSTEMS
+                    </span>
+                    <span className="text-[10px] font-mono font-semibold block text-emerald-400 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
+                      Bare-Metal C/C++ · RTOS · Telemetry
+                    </span>
+                  </div>
+                </a>
+
+                {/* Row 4: SOFTWARE & FRONTEND */}
+                <a
+                  href="#about"
+                  className="flex items-center gap-3 p-2 rounded-xl transition-all group/item cursor-pointer bg-transparent hover:bg-white/10 border border-transparent hover:border-blue-400/30"
+                >
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-blue-500/10 border border-blue-400/40 group-hover/item:border-blue-300 transition-colors">
+                    <Code2 className="w-4 h-4 text-blue-300" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="font-mono text-xs sm:text-sm font-bold tracking-[0.14em] uppercase block text-white group-hover/item:text-blue-300 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] transition-colors">
+                      SOFTWARE &amp; FRONTEND DEV
+                    </span>
+                    <span className="text-[10px] font-mono font-semibold block text-blue-400 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
+                      React · Next.js · TypeScript · WebGL
                     </span>
                   </div>
                 </a>
@@ -557,21 +451,17 @@ export default function Hero({ mode = 'dark' }) {
             <button
               type="button"
               onClick={toggleVideoPlayback}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-[11px] font-mono transition-all backdrop-blur-md cursor-pointer ${
-                isDark
-                  ? 'bg-black/40 hover:bg-black/60 border-white/10 text-neutral-300 hover:text-white'
-                  : 'bg-white/85 hover:bg-white border-slate-300 text-slate-800 shadow-sm'
-              }`}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 text-[11px] font-mono transition-all backdrop-blur-md cursor-pointer bg-black/40 hover:bg-black/60 text-neutral-200 hover:text-white"
               title={isPlaying ? "Pause cinematic background" : "Play cinematic background"}
             >
               {isPlaying ? (
                 <>
-                  <Pause className={`w-3 h-3 ${isDark ? 'text-cyan-400' : 'text-blue-600'}`} />
+                  <Pause className="w-3 h-3 text-cyan-400" />
                   <span className="hidden sm:inline">CINEMATIC VIDEO</span>
                 </>
               ) : (
                 <>
-                  <Play className={`w-3 h-3 fill-current ${isDark ? 'text-amber-400 fill-amber-400' : 'text-amber-600 fill-amber-600'}`} />
+                  <Play className="w-3 h-3 fill-amber-400 text-amber-400" />
                   <span className="hidden sm:inline">PAUSED</span>
                 </>
               )}
@@ -583,21 +473,15 @@ export default function Hero({ mode = 'dark' }) {
         <div className="flex flex-col items-center">
           <a
             href="#about"
-            className={`flex items-center gap-2.5 text-[10px] sm:text-xs font-mono font-medium tracking-[0.28em] transition-colors uppercase group cursor-pointer ${
-              isDark ? 'text-neutral-400 hover:text-cyan-300' : 'text-slate-600 hover:text-blue-600 font-bold'
-            }`}
+            className="flex items-center gap-2.5 text-[10px] sm:text-xs font-mono font-medium tracking-[0.28em] transition-colors uppercase group cursor-pointer text-neutral-300 hover:text-cyan-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]"
           >
-            <div className={`w-4 h-6 rounded-full border flex items-start justify-center p-1 transition-colors ${
-              isDark ? 'border-neutral-400/70 group-hover:border-cyan-400' : 'border-slate-500 group-hover:border-blue-600'
-            }`}>
-              <span className={`w-1 h-1.5 rounded-full animate-bounce ${isDark ? 'bg-cyan-400' : 'bg-blue-600'}`} />
+            <div className="w-4 h-6 rounded-full border border-neutral-400/80 group-hover:border-cyan-400 flex items-start justify-center p-1 transition-colors">
+              <span className="w-1 h-1.5 rounded-full animate-bounce bg-cyan-400" />
             </div>
             <span>SCROLL TO EXPLORE</span>
           </a>
 
-          <div className={`w-[1px] h-6 mt-2 ${
-            isDark ? 'bg-gradient-to-b from-neutral-500/60 to-transparent' : 'bg-gradient-to-b from-slate-400 to-transparent'
-          }`} />
+          <div className="w-[1px] h-6 mt-2 bg-gradient-to-b from-neutral-400/80 to-transparent" />
         </div>
 
         {/* Right: Switch Mode (Cinematic Video vs 3D Avatar) */}
@@ -605,21 +489,17 @@ export default function Hero({ mode = 'dark' }) {
           <button
             type="button"
             onClick={() => setViewMode(prev => prev === 'video' ? 'avatar' : 'video')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-[11px] font-mono transition-all backdrop-blur-md cursor-pointer ${
-              isDark
-                ? 'bg-black/40 hover:bg-black/60 border-white/10 text-neutral-300 hover:text-white'
-                : 'bg-white/85 hover:bg-white border-slate-300 text-slate-800 shadow-sm'
-            }`}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 text-[11px] font-mono transition-all backdrop-blur-md cursor-pointer bg-black/40 hover:bg-black/60 text-neutral-200 hover:text-white"
             title="Toggle between cinematic video and interactive 3D WebGL avatar"
           >
             {viewMode === 'video' ? (
               <>
-                <Box className={`w-3 h-3 ${isDark ? 'text-cyan-400' : 'text-blue-600'}`} />
+                <Box className="w-3 h-3 text-cyan-400" />
                 <span className="hidden sm:inline">SWITCH TO 3D AVATAR</span>
               </>
             ) : (
               <>
-                <Film className={`w-3 h-3 ${isDark ? 'text-amber-400' : 'text-amber-600'}`} />
+                <Film className="w-3 h-3 text-amber-400" />
                 <span className="hidden sm:inline">SWITCH TO VIDEO</span>
               </>
             )}
