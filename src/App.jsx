@@ -5,6 +5,7 @@ import CustomCursor from './components/CustomCursor';
 import ScrollProgressBar from './components/ScrollProgressBar';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import AboutMe from './components/AboutMe';
 import DoorsSection from './components/DoorsSection';
 import StoryTimeline from './components/StoryTimeline';
 import HowITurnIdeas from './components/HowITurnIdeas';
@@ -67,8 +68,11 @@ export default function App() {
 
       {/* Main Content Sections */}
       <main className="relative z-10">
-        {/* Editorial Hero with 3D Desk Flip-Calendar & Photo Frame */}
+        {/* Editorial Hero with 3D WebGL Model in Center */}
         <Hero />
+
+        {/* Dedicated About Me Section (Followed immediately on scroll) */}
+        <AboutMe />
 
         {/* The Signature 3D Doors Hallway ("Magic happens behind the doors") */}
         <DoorsSection />

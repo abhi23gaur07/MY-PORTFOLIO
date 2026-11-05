@@ -119,7 +119,8 @@ export default function DoorsSection() {
 
   return (
     <section
-      id="works"
+      id="doors"
+      data-section="works"
       className="relative z-10 py-24 sm:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden bg-gradient-to-b from-[#e8e4e0] via-[#dfd8d3] to-[#e8e4e0] dark:from-[#1a1818] dark:via-[#141212] dark:to-[#1a1818] transition-colors duration-500"
     >
       {/* Wall Texture / Subtle Plaster Overlay */}

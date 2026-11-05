@@ -11,333 +11,300 @@ import {
   Compass, 
   Download, 
   Sparkles,
-  ExternalLink,
   ChevronDown
 } from 'lucide-react';
+import Abhishek3DViewer from './Abhishek3DViewer';
 import { portfolioData } from '../data/portfolioData';
 
+// Custom Precision SVG Icons matching the reference mockup
+function RoboticArmIcon({ className = "w-6 h-6" }) {
+  return (
+    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <ellipse cx="26" cy="52" rx="14" ry="5" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="2 1" />
+      <path d="M16 52 C16 48, 36 48, 36 52" stroke="#38bdf8" strokeWidth="1.5" />
+      <rect x="23" y="44" width="6" height="8" rx="2" stroke="#38bdf8" strokeWidth="1.5" fill="rgba(56,189,248,0.15)" />
+      <circle cx="26" cy="42" r="3.5" stroke="#38bdf8" strokeWidth="1.5" fill="#090d16" />
+      <path d="M26 38.5 L24 24" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="24" cy="23" r="3" stroke="#38bdf8" strokeWidth="1.5" fill="#38bdf8" fillOpacity="0.4" />
+      <path d="M27 23 L44 32" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="45" cy="33" r="2.5" stroke="#38bdf8" strokeWidth="1.5" />
+      <path d="M47 31 L54 27 M47 35 L54 39" stroke="#38bdf8" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="54" cy="27" r="1.5" fill="#38bdf8" />
+      <circle cx="54" cy="39" r="1.5" fill="#38bdf8" />
+    </svg>
+  );
+}
+
+function StealthDroneIcon({ className = "w-10 h-6" }) {
+  return (
+    <svg viewBox="0 0 84 54" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <path d="M42 4 L48 24 L56 34 L52 38 L42 35 L32 38 L28 34 L36 24 Z" stroke="#38bdf8" strokeWidth="1.5" fill="rgba(56,189,248,0.12)" />
+      <path d="M46 18 L80 32 L78 36 L52 35" stroke="#38bdf8" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M38 18 L4 32 L6 36 L32 35" stroke="#38bdf8" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M46 18 L76 30" stroke="rgba(255,255,255,0.7)" strokeWidth="1" strokeLinecap="round" />
+      <path d="M38 18 L8 30" stroke="rgba(255,255,255,0.7)" strokeWidth="1" strokeLinecap="round" />
+      <path d="M35 34 L33 46 L37 45 Z" stroke="#38bdf8" strokeWidth="1.2" fill="rgba(56,189,248,0.2)" />
+      <path d="M49 34 L51 46 L47 45 Z" stroke="#38bdf8" strokeWidth="1.2" fill="rgba(56,189,248,0.2)" />
+      <ellipse cx="42" cy="36" rx="3.5" ry="1.5" fill="#38bdf8" opacity="0.8" />
+      <circle cx="42" cy="22" r="2" fill="#38bdf8" />
+    </svg>
+  );
+}
+
 /**
- * Hero - 1:1 Exact 3D Cinematic Recreation of Abhishek Gaur's Concept Mockup.
+ * Hero - 3D Cinematic Showcase with Interactive Abhishek Gaur .GLB Model.
  * 
  * Features:
- * - 3D Perspective Stage with interactive mouse parallax tilt
- * - Central 3D beveled glass holographic slab over glowing metallic cyber pedestal
- * - 4 Orbiting 3D Holographic Cards with live interactive hotspots:
- *   1. Embedded Systems (Build. Integrate. Innovate.) -> jumps to #skills
- *   2. IoT & Smart Systems (Connect. Automate. Evolve.) -> jumps to #works
- *   3. Defence Technology (For a Safer Tomorrow.) -> jumps to #about
- *   4. SIH 2026 (#1 Hardware, #8 Overall) -> jumps to #achievements
- * - Left column chiseled chrome typography with live blinking cyan cursor
- * - Glowing cyber pill CTA "Explore My Work →" & Glass circle "▶ Watch Intro"
- * - Cinema-grade Intro Spotlight Modal with verbatim Circuit Philosophy quote
- * - Responsive desktop 3D stage and mobile stacked layout
+ * - Direct WebGL 3D model of Abhishek Gaur standing on the circular cyber stage
+ * - Interactive 360° drag orbit and mouse parallax tracking
+ * - Minimal, clean typography: "with only few details"
+ * - Followed immediately by About Me on scroll, followed by The Doors
  */
 export default function Hero() {
   const { personal } = portfolioData;
   const resumeHref = personal.resumeUrl || '/Abhishek_Gaur_Resume.pdf';
-
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [showIntroModal, setShowIntroModal] = useState(false);
-  const [activeCardTooltip, setActiveCardTooltip] = useState(null);
-  const stageRef = useRef(null);
-
-  // 3D Mouse Parallax Tracking on Desktop
-  const handleMouseMove = useCallback((e) => {
-    if (!stageRef.current) return;
-    const rect = stageRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-    setMousePos({
-      x: Math.max(-1, Math.min(1, x)),
-      y: Math.max(-1, Math.min(1, y))
-    });
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    setMousePos({ x: 0, y: 0 });
-  }, []);
-
-  // Compute 3D tilt values
-  const tiltY = mousePos.x * 5.5;
-  const tiltX = mousePos.y * -4.5;
-  const parallaxX = mousePos.x * -12;
-  const parallaxY = mousePos.y * -8;
 
   return (
     <section
       id="home"
-      ref={stageRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="relative min-h-screen w-full bg-[#06080d] text-white flex flex-col justify-between overflow-hidden select-none"
+      className="relative min-h-[94vh] lg:min-h-screen w-full bg-[#05070c] text-white flex flex-col justify-between overflow-hidden select-none pt-20 pb-6"
     >
-      {/* Background Volumetric Particle Aura */}
-      <div className="absolute inset-0 bg-radial from-blue-950/20 via-[#06080d]/80 to-[#06080d] pointer-events-none" />
+      {/* ======================================================== */}
+      {/* 1. ATMOSPHERIC 3D LIGHTING & GRADIENTS                   */}
+      {/* ======================================================== */}
+      <div className="absolute inset-0 bg-radial from-blue-900/15 via-[#06080d]/85 to-[#05070c] pointer-events-none" />
 
-      {/* DESKTOP 3D CINEMATIC VIEWPORT (16:9 Photorealistic 3D Stage) */}
-      <div className="hidden md:flex relative w-full flex-1 items-center justify-center pt-20 pb-12 px-4 sm:px-6 lg:px-8 perspective-[1400px]">
-        
-        {/* 3D Tilt Stage Wrapper */}
-        <div
-          style={{
-            transform: `rotateY(${tiltY}deg) rotateX(${tiltX}deg) scale(1.01)`,
-            transformStyle: 'preserve-3d',
-            transition: 'transform 0.18s cubic-bezier(0.16, 1, 0.3, 1)'
-          }}
-          className="relative w-full max-w-[1360px] aspect-[16/9] rounded-2xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.9)] border border-cyan-500/20"
-        >
-          {/* Base 3D Rendered Cinematic Artwork */}
-          <img
-            src="/cinematic-stage.jpg"
-            alt="Abhishek Gaur — 3D Cinematic Portfolio Stage"
-            className="w-full h-full object-cover object-center filter brightness-[1.02] contrast-[1.03]"
-          />
+      {/* Volumetric Center Spotlight behind Abhishek 3D Model */}
+      <div className="absolute top-[35%] left-[55%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[650px] bg-radial from-cyan-500/15 via-blue-600/10 to-transparent blur-[100px] rounded-full pointer-events-none" />
 
-          {/* Interactive Atmospheric Glow & Lens Flare Overlay */}
-          <div
-            style={{
-              transform: `translate(${parallaxX}px, ${parallaxY}px)`
-            }}
-            className="absolute inset-0 bg-radial from-cyan-400/10 via-transparent to-transparent pointer-events-none"
-          />
+      {/* Glossy Reflective Stage Floor */}
+      <div className="absolute inset-x-0 bottom-0 h-[36%] bg-gradient-to-t from-[#040508] via-[#070912]/80 to-transparent pointer-events-none" />
+      <div 
+        className="absolute inset-x-0 bottom-0 h-[28%] opacity-20 pointer-events-none"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(56,189,248,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(56,189,248,0.12) 1px, transparent 1px)',
+          backgroundSize: '48px 48px',
+          transform: 'perspective(500px) rotateX(60deg)',
+          transformOrigin: 'bottom center'
+        }}
+      />
 
-          {/* ======================================================== */}
-          {/* LIVE INTERACTIVE OVERLAYS (Precise 1:1 Hotspots)         */}
-          {/* ======================================================== */}
-
-          {/* 1. Left Typography Live Overlay (Selectable & Sharp) */}
-          <div className="absolute top-[22%] left-[6.5%] z-20 pointer-events-none max-w-[400px]">
-            {/* Blinking Cyan Cursor on GAUR */}
-            <div className="absolute top-[96px] left-[214px] w-[3px] h-[48px] bg-cyan-400 shadow-[0_0_12px_#38bdf8] animate-[pulse_1s_infinite] pointer-events-none" />
-          </div>
-
-          {/* 2. Primary CTA: "Explore My Work →" */}
-          <a
-            href="#works"
-            title="Explore Flagship Hardware & IoT Doors"
-            className="absolute top-[63.2%] left-[6.8%] z-30 w-[140px] h-[44px] rounded-full bg-cyan-500/0 hover:bg-cyan-500/20 border-2 border-transparent hover:border-cyan-400/80 shadow-none hover:shadow-[0_0_25px_rgba(56,189,248,0.4)] transition-all duration-300 cursor-pointer flex items-center justify-center group"
-          >
-            <span className="sr-only">Explore My Work</span>
-            <div className="w-full h-full rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-xs font-bold text-cyan-300">
-              <span>Enter Doors</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+      {/* ======================================================== */}
+      {/* 2. MAIN 3D STAGE CONTAINER (Typography + 3D Model)       */}
+      {/* ======================================================== */}
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 flex-1 flex items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-4 items-center w-full">
+          
+          {/* LEFT COLUMN: Clean Minimal Editorial Typography (5 cols) */}
+          <div className="lg:col-span-5 flex flex-col items-start text-left z-20 space-y-4 pt-4 lg:pt-0">
+            
+            {/* "HI, I'M" with Cyan Neon Accent Bar */}
+            <div className="flex items-center gap-3">
+              <span className="text-xs sm:text-sm font-mono font-bold tracking-[0.25em] text-neutral-300 uppercase">
+                HI, I'M
+              </span>
+              <div className="w-10 h-[3px] rounded-full bg-cyan-400 shadow-[0_0_12px_#38bdf8]" />
             </div>
-          </a>
 
-          {/* 3. Secondary CTA: "▶ Watch Intro" */}
-          <button
-            type="button"
-            onClick={() => setShowIntroModal(true)}
-            title="Watch 3D Engineering Intro Tour"
-            className="absolute top-[63.2%] left-[19.8%] z-30 w-[130px] h-[44px] rounded-full bg-cyan-500/0 hover:bg-white/10 border-2 border-transparent hover:border-white/40 shadow-none hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all duration-300 cursor-pointer flex items-center justify-center group"
-          >
-            <span className="sr-only">Watch Intro</span>
-            <div className="w-full h-full rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-xs font-semibold text-white">
-              <Play className="w-3 h-3 fill-cyan-400 text-cyan-400" />
-              <span>Play Intro</span>
+            {/* Massive Chiseled 3D Chrome Typography with Blinking Cursor */}
+            <div>
+              <h1 className="text-5xl sm:text-7xl lg:text-[76px] font-black tracking-[-0.04em] leading-[0.92] text-white">
+                <span className="block bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
+                  ABHISHEK
+                </span>
+                <span className="inline-flex items-baseline bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
+                  GAUR
+                </span>
+                {/* Blinking Cyan Cursor Bar */}
+                <span className="inline-block w-[3.5px] h-[0.8em] bg-cyan-400 ml-2 align-baseline translate-y-1 shadow-[0_0_12px_#38bdf8] animate-[pulse_1s_infinite]" />
+              </h1>
             </div>
-          </button>
 
-          {/* 4. Card 1 Hotspot: Embedded Systems (Top-Left) */}
-          <a
-            href="#skills"
-            onMouseEnter={() => setActiveCardTooltip('embedded')}
-            onMouseLeave={() => setActiveCardTooltip(null)}
-            title="Embedded Systems: ARM Cortex-M, STM32 & Firmware"
-            className="absolute top-[14.8%] left-[33.2%] z-30 w-[142px] h-[78px] rounded-xl border border-transparent hover:border-cyan-400/70 hover:bg-cyan-500/15 shadow-none hover:shadow-[0_0_30px_rgba(56,189,248,0.35)] transition-all duration-300 cursor-pointer"
-          >
-            <span className="sr-only">Embedded Systems</span>
-            {activeCardTooltip === 'embedded' && (
-              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded bg-black/90 border border-cyan-400/50 text-[10px] font-mono text-cyan-300 whitespace-nowrap shadow-lg">
-                View ARM Cortex-M & STM32 Skills ↓
-              </div>
-            )}
-          </a>
-
-          {/* 5. Card 2 Hotspot: IoT & Smart Systems (Bottom-Left) */}
-          <a
-            href="#works"
-            onMouseEnter={() => setActiveCardTooltip('iot')}
-            onMouseLeave={() => setActiveCardTooltip(null)}
-            title="IoT & Smart Systems: Acoustic ToF & mmWave Radar"
-            className="absolute top-[52.5%] left-[30.5%] z-30 w-[165px] h-[95px] rounded-xl border border-transparent hover:border-cyan-400/70 hover:bg-cyan-500/15 shadow-none hover:shadow-[0_0_30px_rgba(56,189,248,0.35)] transition-all duration-300 cursor-pointer"
-          >
-            <span className="sr-only">IoT & Smart Systems</span>
-            {activeCardTooltip === 'iot' && (
-              <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded bg-black/90 border border-cyan-400/50 text-[10px] font-mono text-cyan-300 whitespace-nowrap shadow-lg">
-                View Aqua Saviour & Nexus Nurture ↓
-              </div>
-            )}
-          </a>
-
-          {/* 6. Card 3 Hotspot: Defence Technology (Top-Right) */}
-          <a
-            href="#about"
-            onMouseEnter={() => setActiveCardTooltip('defence')}
-            onMouseLeave={() => setActiveCardTooltip(null)}
-            title="Defence Technology: RRU Specialization & Hardware"
-            className="absolute top-[12.5%] left-[74.5%] z-30 w-[185px] h-[140px] rounded-xl border border-transparent hover:border-cyan-400/70 hover:bg-cyan-500/15 shadow-none hover:shadow-[0_0_30px_rgba(56,189,248,0.35)] transition-all duration-300 cursor-pointer"
-          >
-            <span className="sr-only">Defence Technology</span>
-            {activeCardTooltip === 'defence' && (
-              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded bg-black/90 border border-cyan-400/50 text-[10px] font-mono text-cyan-300 whitespace-nowrap shadow-lg">
-                Rashtriya Raksha University Specialization ↓
-              </div>
-            )}
-          </a>
-
-          {/* 7. Card 4 Hotspot: SIH 2026 Winner (Bottom-Right) */}
-          <a
-            href="#achievements"
-            onMouseEnter={() => setActiveCardTooltip('sih')}
-            onMouseLeave={() => setActiveCardTooltip(null)}
-            title="SIH 2026: #1 Hardware Category · #8 Overall"
-            className="absolute top-[52.5%] left-[76.2%] z-30 w-[180px] h-[98px] rounded-xl border border-transparent hover:border-amber-400/80 hover:bg-amber-500/15 shadow-none hover:shadow-[0_0_30px_rgba(251,191,36,0.35)] transition-all duration-300 cursor-pointer"
-          >
-            <span className="sr-only">SIH 2026 Achievement</span>
-            {activeCardTooltip === 'sih' && (
-              <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded bg-black/90 border border-amber-400/50 text-[10px] font-mono text-amber-300 whitespace-nowrap shadow-lg">
-                View SIH #1 Hardware Trophy Details ↓
-              </div>
-            )}
-          </a>
-
-          {/* 8. Center Pedestal Badge Interactive Glow */}
-          <div className="absolute top-[82.5%] left-[41%] w-[270px] h-[34px] z-30 rounded-full border border-transparent hover:border-cyan-400/50 hover:bg-cyan-500/10 cursor-pointer transition-all duration-300 flex items-center justify-center">
-            <span className="sr-only">Rashtriya Raksha University B.Tech ECE</span>
-          </div>
-
-          {/* 9. Bottom Left Scroll Down Link */}
-          <a
-            href="#about"
-            className="absolute bottom-[3%] left-[4.5%] z-30 inline-flex items-center gap-2 text-xs font-mono text-neutral-400 hover:text-cyan-300 transition-colors"
-          >
-            <div className="w-4 h-6 rounded-full border border-neutral-500 flex items-start justify-center p-1">
-              <span className="w-1 h-1.5 rounded-full bg-cyan-400 animate-bounce" />
+            {/* Wide Spaced Tracker: CREATIVE ENGINEER */}
+            <div className="pt-1">
+              <span className="text-[11px] sm:text-xs font-mono font-bold tracking-[0.38em] text-cyan-300 uppercase block">
+                CREATIVE ENGINEER
+              </span>
             </div>
-            <span>Scroll Down</span>
-          </a>
 
-        </div>
+            {/* Clean Subtitle */}
+            <div className="space-y-1 text-xs sm:text-sm text-neutral-300 font-sans leading-relaxed pt-1 max-w-md">
+              <p className="font-medium text-slate-200">
+                Embedded Systems Engineer <span className="text-cyan-400 mx-1.5 font-bold">|</span> IoT Innovator
+              </p>
+              <p className="text-neutral-400 font-normal">
+                Defence Technology Specialist · Rashtriya Raksha University
+              </p>
+            </div>
 
-      </div>
+            {/* Action Buttons: Glowing Pill + Glass Play Button */}
+            <div className="flex flex-wrap items-center gap-3.5 pt-4">
+              
+              {/* Primary CTA: "Explore My Work →" */}
+              <a
+                href="#doors"
+                className="group relative inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-cyan-500/20 via-blue-600/30 to-indigo-600/20 hover:from-cyan-500/35 hover:to-blue-600/45 text-white font-bold text-xs sm:text-sm tracking-wide border-2 border-cyan-400 shadow-[0_0_25px_rgba(56,189,248,0.35)] hover:shadow-[0_0_40px_rgba(56,189,248,0.6)] transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+              >
+                <span>Explore My Work</span>
+                <ArrowRight className="w-4 h-4 text-cyan-300 transition-transform group-hover:translate-x-1" />
+              </a>
 
-      {/* MOBILE RESPONSIVE 3D CARD STACK (Shown on screens < 768px) */}
-      <div className="md:hidden flex flex-col items-center pt-24 pb-16 px-4 space-y-8 z-10">
-        
-        {/* Left Column Content (Centered for Mobile) */}
-        <div className="text-center space-y-3 max-w-md">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono">
-            <Shield className="w-3.5 h-3.5" />
-            <span>RRU · Specialization in Defence Tech</span>
+              {/* Secondary CTA: "▶ Watch Intro" */}
+              <button
+                type="button"
+                onClick={() => setShowIntroModal(true)}
+                className="group inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-white/5 hover:bg-white/10 text-white font-semibold text-xs sm:text-sm border border-white/15 hover:border-cyan-400/50 shadow-lg transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+              >
+                <div className="w-7 h-7 rounded-full bg-cyan-500/20 border border-cyan-400/60 flex items-center justify-center text-cyan-300 shadow-[0_0_10px_rgba(56,189,248,0.3)] group-hover:bg-cyan-400 group-hover:text-slate-950 transition-all">
+                  <Play className="w-3 h-3 fill-current translate-x-0.5" />
+                </div>
+                <span>Watch Intro</span>
+              </button>
+
+              {/* Resume download */}
+              <a
+                href={resumeHref}
+                download="Abhishek_Gaur_Resume.pdf"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-semibold text-xs border border-white/10 hover:border-white/20 transition-all"
+              >
+                <Download className="w-3.5 h-3.5 text-slate-400" />
+                <span>Resume</span>
+              </a>
+
+            </div>
+
           </div>
 
-          <h1 className="text-4xl font-black tracking-tight leading-none text-white">
-            ABHISHEK <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-400">
-              GAUR |
-            </span>
-          </h1>
+          {/* CENTER & RIGHT COLUMN: REAL 3D WEBGL MODEL STAGE (7 cols) */}
+          <div className="lg:col-span-7 relative flex justify-center items-center min-h-[480px] sm:min-h-[560px] lg:min-h-[640px]">
+            
+            {/* The 3D WebGL Canvas loading abhishek_gaur.glb */}
+            <div className="relative w-full h-[480px] sm:h-[560px] lg:h-[640px] flex items-center justify-center">
+              <Abhishek3DViewer className="w-full h-full" />
 
-          <p className="text-xs font-mono tracking-widest text-cyan-400 uppercase">
-            CREATIVE ENGINEER
-          </p>
+              {/* 4 Minimal Ambient 3D Glass Cards orbiting around stage */}
+              
+              {/* Card 1: Embedded Systems (Top-Left) */}
+              <a
+                href="#skills"
+                className="absolute top-[8%] left-2 sm:-left-4 z-20 hidden md:flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-[#09101d]/75 backdrop-blur-xl border border-cyan-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:border-cyan-300 hover:scale-105 transition-all group"
+              >
+                <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center shrink-0">
+                  <Cpu className="w-3.5 h-3.5 text-cyan-300" />
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-bold text-white group-hover:text-cyan-300 leading-tight">
+                    Embedded Systems
+                  </div>
+                  <div className="text-[9px] font-mono text-neutral-400">
+                    Build. Integrate. Innovate.
+                  </div>
+                </div>
+              </a>
 
-          <p className="text-xs text-neutral-300 font-sans leading-relaxed">
-            Embedded Systems Engineer · IoT Innovator · Defence Technology Enthusiast at Rashtriya Raksha University.
-          </p>
+              {/* Card 2: IoT & Smart Systems (Bottom-Left) */}
+              <a
+                href="#doors"
+                className="absolute bottom-[16%] left-2 sm:-left-6 z-20 hidden md:flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-[#09101d]/75 backdrop-blur-xl border border-cyan-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:border-cyan-300 hover:scale-105 transition-all group"
+              >
+                <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center shrink-0">
+                  <RoboticArmIcon className="w-4 h-4 text-cyan-300" />
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-bold text-white group-hover:text-cyan-300 leading-tight">
+                    IoT &amp; Smart Systems
+                  </div>
+                  <div className="text-[9px] font-mono text-neutral-400">
+                    Connect. Automate. Evolve.
+                  </div>
+                </div>
+              </a>
 
-          {/* Mobile Action Buttons */}
-          <div className="flex items-center justify-center gap-3 pt-2">
-            <a
-              href="#works"
-              className="px-5 py-2.5 rounded-full bg-cyan-500 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/25 flex items-center gap-1.5"
-            >
-              <span>Explore My Work</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </a>
+              {/* Card 3: Defence Technology (Top-Right) */}
+              <a
+                href="#about"
+                className="absolute top-[10%] right-2 sm:-right-4 z-20 hidden md:flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-[#09101d]/75 backdrop-blur-xl border border-cyan-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:border-cyan-300 hover:scale-105 transition-all group"
+              >
+                <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center shrink-0">
+                  <Shield className="w-3.5 h-3.5 text-cyan-300" />
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-bold text-white group-hover:text-cyan-300 leading-tight">
+                    Defence Technology
+                  </div>
+                  <div className="text-[9px] font-mono text-neutral-400">
+                    For a Safer Tomorrow.
+                  </div>
+                </div>
+              </a>
 
-            <button
-              onClick={() => setShowIntroModal(true)}
-              className="px-4 py-2.5 rounded-full bg-white/10 border border-white/20 text-white font-semibold text-xs flex items-center gap-1.5"
-            >
-              <Play className="w-3 h-3 fill-current" />
-              <span>Watch Intro</span>
-            </button>
+              {/* Card 4: SIH 2026 Winner (Bottom-Right) */}
+              <a
+                href="#achievements"
+                className="absolute bottom-[18%] right-2 sm:-right-6 z-20 hidden md:flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-[#09101d]/75 backdrop-blur-xl border border-amber-400/50 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:border-amber-300 hover:scale-105 transition-all group"
+              >
+                <div className="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-400/50 flex items-center justify-center shrink-0">
+                  <Trophy className="w-4 h-4 text-amber-400" />
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-bold text-white group-hover:text-amber-300 leading-tight">
+                    SIH 2026 Winner
+                  </div>
+                  <div className="text-[10px] font-mono text-amber-400">
+                    #1 Hardware · #8 Overall
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
           </div>
+
         </div>
-
-        {/* Center Portrait in 3D Glass Frame */}
-        <div className="relative w-full max-w-xs aspect-[3/4] rounded-3xl overflow-hidden border-2 border-cyan-500/30 shadow-2xl shadow-cyan-950/60 p-2 bg-gradient-to-b from-[#111624] to-[#07090f]">
-          <img
-            src="/abhishek-forward.jpg"
-            alt="Abhishek Gaur"
-            className="w-full h-full object-cover object-[center_20%] rounded-2xl"
-          />
-          <div className="absolute bottom-3 inset-x-4 p-2 rounded-xl bg-black/70 backdrop-blur-md border border-white/10 text-center font-mono text-[10px] text-cyan-300">
-            Rashtriya Raksha University · B.Tech ECE
-          </div>
-        </div>
-
-        {/* 4 Cards Grid for Mobile */}
-        <div className="grid grid-cols-2 gap-3 w-full max-w-sm">
-          <a
-            href="#skills"
-            className="p-3 rounded-2xl bg-white/5 border border-cyan-500/20 hover:border-cyan-400 text-left transition-all"
-          >
-            <Cpu className="w-4 h-4 text-cyan-400 mb-1" />
-            <div className="text-xs font-bold text-white">Embedded Systems</div>
-            <div className="text-[10px] font-mono text-neutral-400">Build. Integrate.</div>
-          </a>
-
-          <a
-            href="#works"
-            className="p-3 rounded-2xl bg-white/5 border border-cyan-500/20 hover:border-cyan-400 text-left transition-all"
-          >
-            <Radio className="w-4 h-4 text-blue-400 mb-1" />
-            <div className="text-xs font-bold text-white">IoT &amp; Smart Systems</div>
-            <div className="text-[10px] font-mono text-neutral-400">Connect. Automate.</div>
-          </a>
-
-          <a
-            href="#about"
-            className="p-3 rounded-2xl bg-white/5 border border-cyan-500/20 hover:border-cyan-400 text-left transition-all"
-          >
-            <Shield className="w-4 h-4 text-cyan-400 mb-1" />
-            <div className="text-xs font-bold text-white">Defence Tech</div>
-            <div className="text-[10px] font-mono text-neutral-400">For a Safer Tomorrow</div>
-          </a>
-
-          <a
-            href="#achievements"
-            className="p-3 rounded-2xl bg-white/5 border border-amber-500/20 hover:border-amber-400 text-left transition-all"
-          >
-            <Trophy className="w-4 h-4 text-amber-400 mb-1" />
-            <div className="text-xs font-bold text-white">SIH 2026 Winner</div>
-            <div className="text-[10px] font-mono text-amber-300">#1 Hardware Category</div>
-          </a>
-        </div>
-
       </div>
 
       {/* ======================================================== */}
-      {/* 3D CINEMATIC INTRO SPOTLIGHT MODAL                       */}
+      {/* 3. BOTTOM SCROLL DOWN PILL INDICATOR                     */}
+      {/* ======================================================== */}
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 w-full pt-2 z-20 flex justify-between items-center">
+        <a
+          href="#about"
+          className="inline-flex items-center gap-2.5 text-xs font-mono text-neutral-400 hover:text-cyan-300 transition-colors group cursor-pointer"
+        >
+          {/* Animated Mouse Capsule */}
+          <div className="w-4 h-6 rounded-full border border-neutral-500 group-hover:border-cyan-400 flex items-start justify-center p-1 transition-colors">
+            <span className="w-1 h-1.5 rounded-full bg-cyan-400 animate-bounce" />
+          </div>
+          <span className="tracking-wider">Scroll to Explore About Me</span>
+          <ChevronDown className="w-3.5 h-3.5 text-cyan-400 group-hover:translate-y-0.5 transition-transform" />
+        </a>
+
+        {/* Live Status Badge */}
+        <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-slate-400">
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#38bdf8]" />
+          <span>Real-Time 3D Interactive WebGL Stage</span>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* 4. CINEMATIC INTRO SPOTLIGHT MODAL                       */}
       {/* ======================================================== */}
       {showIntroModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-2xl animate-fade-in">
           
-          {/* Backdrop click to dismiss */}
+          {/* Dismiss Backdrop */}
           <div className="absolute inset-0" onClick={() => setShowIntroModal(false)} />
 
-          {/* Modal Container */}
-          <div className="relative w-full max-w-2xl rounded-3xl bg-gradient-to-b from-[#101524] to-[#090b12] border-2 border-cyan-500/40 p-6 sm:p-8 shadow-[0_0_80px_rgba(56,189,248,0.3)] text-white z-10 transition-all">
+          {/* Modal Card */}
+          <div className="relative w-full max-w-2xl rounded-3xl bg-gradient-to-b from-[#101524] to-[#070912] border-2 border-cyan-500/40 p-6 sm:p-8 shadow-[0_0_80px_rgba(56,189,248,0.35)] text-white z-10">
             
-            {/* Header */}
+            {/* Header Row */}
             <div className="flex items-start justify-between pb-4 border-b border-white/10">
               <div>
                 <span className="text-[10px] font-mono uppercase tracking-widest text-cyan-400 flex items-center gap-1.5 font-bold">
                   <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                  3D Cinematic Overview · Abhishek Gaur
+                  Engineering Spotlight · Abhishek Gaur
                 </span>
                 <h3 className="text-xl sm:text-2xl font-black text-white mt-1">
                   Creative Hardware &amp; Defence Technology Lead
@@ -373,7 +340,7 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* Core Competencies Quick Summary */}
+            {/* Core Competencies Quick Summary Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-6 text-center">
               <div className="p-3 rounded-xl bg-white/5 border border-white/10">
                 <Trophy className="w-4 h-4 text-amber-400 mx-auto mb-1" />
@@ -400,7 +367,7 @@ export default function Hero() {
             {/* Action CTAs inside modal */}
             <div className="flex flex-wrap items-center justify-end gap-3 pt-4 border-t border-white/10">
               <a
-                href="#works"
+                href="#doors"
                 onClick={() => setShowIntroModal(false)}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/25 transition-all"
               >
