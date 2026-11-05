@@ -4,6 +4,7 @@ import PullCord from './components/PullCord';
 import CustomCursor from './components/CustomCursor';
 import ScrollProgressBar from './components/ScrollProgressBar';
 import Navbar from './components/Navbar';
+import CinematicScene3D from './components/CinematicScene3D';
 import Hero from './components/Hero';
 import AboutMe from './components/AboutMe';
 import DoorsSection from './components/DoorsSection';
@@ -65,6 +66,9 @@ export default function App() {
 
       {/* Sticky Navigation Header with Live IST Clock */}
       <Navbar />
+
+      {/* Persistent Full-Page 3D Cinematic Canvas (abhishek-gaur.glb + Camera Tracking) */}
+      <CinematicScene3D />
 
       {/* Main Content Sections */}
       <main className="relative z-10">
